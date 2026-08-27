@@ -371,10 +371,6 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
       <div class="s-card-hdr">Monthly Estimates</div>
       <div class="monthly-section">
         <div class="metric-row">
-          <span class="metric-name">Monthly WU</span>
-          <span class="metric-num big" id="s-monthly-wu">0</span>
-        </div>
-        <div class="metric-row">
           <span class="metric-name">Monthly tokens</span>
           <span class="metric-num big" id="s-monthly-tokens">0</span>
         </div>
@@ -476,15 +472,15 @@ const WORKING_DAYS = 21;
 //  STATE
 // ══════════════════════════════════════════════════════
 const state = {
-  users:        { developer:5, analyst:3, tester:4, architect:2, manager:2 },
-  calls:        {},   // role → fn → count (built from ROLES defaults)
+  users:        { developer:0, analyst:0, tester:0, architect:0, manager:0 },
+  calls:        {},   // role → fn → count (all start at 0)
   growthFactor: 1.0
 };
 
-// init calls from defaults
+// init calls to 0
 ROLES.forEach(r => {
   state.calls[r.id] = {};
-  Object.keys(WU).forEach(fn => { state.calls[r.id][fn] = r.fns[fn] || 0; });
+  Object.keys(WU).forEach(fn => { state.calls[r.id][fn] = 0; });
 });
 
 // ══════════════════════════════════════════════════════
@@ -626,8 +622,8 @@ function buildRoleCards(){
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>
+          <div class="fn-desc" style="font-size:.8125rem;color:var(--text);margin-bottom:.1rem">${FN_DESC[fn]||fn}</div>
           <div class="fn-name">${fn}</div>
-          <div class="fn-desc">${FN_DESC[fn]||''}</div>
         </td>
         <td><span class="badge ${badgeCls}">${badgeLbl}</span></td>
         <td>
@@ -763,15 +759,15 @@ function bindEvents(){
   document.getElementById('btn-reset').addEventListener('click', () => {
     ROLES.forEach(role => {
       Object.keys(WU).forEach(fn => {
-        state.calls[role.id][fn] = role.fns[fn]||0;
+        state.calls[role.id][fn] = 0;
         const inp = document.getElementById(`inp-${role.id}-${fn}`);
-        if(inp) inp.value = role.fns[fn]||0;
+        if(inp) inp.value = 0;
         const rwu = document.getElementById(`rwu-${role.id}-${fn}`);
-        if(rwu) rwu.textContent = fmt((role.fns[fn]||0)*WU[fn]);
+        if(rwu) rwu.textContent = '0';
       });
-      state.users[role.id] = {developer:5,analyst:3,tester:4,architect:2,manager:2}[role.id];
+      state.users[role.id] = 0;
       const ui = document.getElementById(`users-${role.id}`);
-      if(ui) ui.value = state.users[role.id];
+      if(ui) ui.value = 0;
     });
     state.growthFactor=1;
     document.getElementById('growth-slider').value=1;
