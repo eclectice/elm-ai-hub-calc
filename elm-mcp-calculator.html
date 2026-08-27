@@ -127,6 +127,10 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 .detail-body{display:none}
 .detail-body.open{display:block}
 
+/* MANUAL MODE */
+.manual-section{display:none;margin-top:.75rem}
+.manual-section.active{display:block}
+
 /* ROLE CARDS */
 .role-card{background:var(--layer);border:1px solid var(--border);margin-bottom:.75rem;border-radius:2px;overflow:hidden}
 .role-card-hdr{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.25rem;background:#f4f4f4;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:background .15s}
@@ -172,10 +176,9 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 .banner.error{background:var(--red-bg);border:1px solid #fa4d56;border-left:3px solid var(--red);color:#750e13}
 .banner.success{background:var(--green-bg);border:1px solid #42be65;border-left:3px solid var(--green);color:#044317}
 
-/* RESET BAR */
-.reset-bar{background:#262626;padding:.5rem 2rem;display:flex;align-items:center;justify-content:flex-end;gap:.75rem}
-.btn-reset{border:1px solid #da1e28;background:transparent;color:#fa4d56;padding:.3rem .875rem;font-size:.8125rem;cursor:pointer;border-radius:2px;font-family:inherit;transition:background .15s}
-.btn-reset:hover{background:#2d0709}
+/* RESET BUTTON */
+.btn-reset{border:1px solid #da1e28;background:transparent;color:var(--red);padding:.3rem .875rem;font-size:.8125rem;cursor:pointer;border-radius:2px;font-family:inherit;transition:background .15s}
+.btn-reset:hover{background:var(--red-bg)}
 
 /* SPINNER */
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -257,7 +260,7 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 </section>
 
 <!-- RESULTS -->
-<div class="results-section" id="results-section" style="display:none">
+<div class="results-section" id="results-section">
 
   <!-- Empty state shown until AI runs -->
   <div id="empty-state" class="empty-state" style="display:none">
@@ -320,17 +323,13 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
     </div>
   </div>
 
-  <!-- Detail toggle -->
-  <button class="detail-toggle-btn" id="detail-toggle">
-    <span>⚙ Review &amp; fine-tune per-role breakdown</span>
-    <span class="detail-chevron" id="detail-chevron">▼</span>
-  </button>
-  <div class="detail-body" id="detail-body">
+  <!-- Role breakdown (always visible) -->
+  <div id="detail-body" class="detail-body open">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+      <span style="font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Per-Role Breakdown</span>
+      <button class="btn-reset" id="btn-reset">✕ Reset All</button>
+    </div>
     <div id="role-cards-wrap"></div>
-  </div>
-
-  <div class="reset-bar">
-    <button class="btn-reset" id="btn-reset">✕ Reset All</button>
   </div>
 
 </div><!-- /results-section -->
@@ -598,13 +597,6 @@ function buildRoleCards(){
 
 // ── EVENTS ────────────────────────────────────────────
 function bindEvents(){
-  const detailBody = document.getElementById('detail-body');
-  const detailChevron = document.getElementById('detail-chevron');
-  document.getElementById('detail-toggle').addEventListener('click', () => {
-    const open = detailBody.classList.toggle('open');
-    detailChevron.classList.toggle('open', open);
-  });
-
   // fn call inputs
   document.getElementById('role-cards-wrap').addEventListener('input', e => {
     const inp = e.target;
@@ -903,32 +895,36 @@ function applyUCResult(parsed){
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // ── MODE SWITCHING ────────────────────────────────────
+ function applyMode(mode){
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode===mode));
+  document.getElementById('mode-desc').textContent = MODE_DESC[mode];
+  const isAI = mode !== 'manual';
+  document.getElementById('chip-row').style.display = isAI ? '' : 'none';
+  const cw = document.getElementById('chat-window');
+  if(!isAI) cw.style.display = 'none';
+  else if(cw.classList.contains('has-messages')) cw.style.display = 'flex';
+  document.getElementById('ai-input-row').style.display = isAI ? '' : 'none';
+  document.getElementById('manual-section').classList.toggle('active', !isAI);
+  if(!isAI){
+    document.getElementById('results-section').style.display = '';
+    const db = document.getElementById('detail-body');
+    const dc = document.getElementById('detail-chevron');
+    db.classList.add('open');
+    dc.classList.add('open');
+    calculate();
+  }
+  if(isAI){
+    document.getElementById('chat-input').placeholder = mode==='org'
+      ? 'e.g. We have 10 developers, 5 req analysts and 3 test engineers using ELM daily…'
+      : 'e.g. We run nightly traceability audits across 200 requirements…';
+  }
+  renderChips();
+}
+
 function setupModes(){
   document.querySelectorAll('.mode-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      currentMode = tab.dataset.mode;
-      document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t===tab));
-      document.getElementById('mode-desc').textContent = MODE_DESC[currentMode];
-      const isAI = currentMode !== 'manual';
-      document.getElementById('chip-row').style.display = isAI ? '' : 'none';
-      document.getElementById('chat-window').style.display = isAI ? '' : 'none';
-      document.getElementById('ai-input-row').style.display = isAI ? '' : 'none';
-      document.getElementById('manual-section').classList.toggle('active', !isAI);
-      if(!isAI){
-        document.getElementById('results-section').style.display='';
-        const db = document.getElementById('detail-body');
-        const dc = document.getElementById('detail-chevron');
-        db.classList.add('open');
-        dc.classList.add('open');
-        calculate();
-      }
-      if(isAI){
-        document.getElementById('chat-input').placeholder = currentMode==='org'
-          ? 'e.g. We have 10 developers, 5 req analysts and 3 test engineers using ELM daily…'
-          : 'e.g. We run nightly traceability audits across 200 requirements…';
-      }
-      renderChips();
-    });
+    tab.addEventListener('click', () => applyMode(tab.dataset.mode));
   });
 }
 
@@ -948,20 +944,20 @@ function renderChips(){
 }
 
 // ── INIT ──────────────────────────────────────────────
-setupModes();
-renderChips();
 buildRoleCards();
 bindEvents();
+setupModes();
+renderChips();
 
-// If saved state has data, show results immediately
+// Restore buffer chip
+document.querySelectorAll('.buffer-chip').forEach(c => c.classList.toggle('active', parseInt(c.dataset.buf,10)===state.buffer));
+
+// If saved state has data, show results immediately (AI modes)
 const hasData = ROLES.some(r => state.users[r.id]>0);
 if(hasData){
   document.getElementById('results-section').style.display='';
   calculate();
 }
-
-// Restore buffer chip
-document.querySelectorAll('.buffer-chip').forEach(c => c.classList.toggle('active', parseInt(c.dataset.buf,10)===state.buffer));
 </script>
 </body>
 </html>
