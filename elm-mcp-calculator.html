@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IBM ELM MCP Usage Calculator</title>
+<style>
+:root {
+  --bg: #f4f4f4;
+  --layer: #ffffff;
+  --header-bg: #161616;
+  --border: #e0e0e0;
+  --border-strong: #c6c6c6;
+  --text: #161616;
+  --muted: #525252;
+  --helper: #6f6f6f;
+  --interactive: #0f62fe;
+  --interactive-hover: #0353e9;
+  --green: #24a148; --green-bg: #defbe6;
+  --amber: #b28600; --amber-bg: #fdf6dd;
+  --red: #da1e28;   --red-bg: #fff1f1;
+  --badge-free-bg: #defbe6;  --badge-free-text: #0e6027;
+  --badge-5-bg: #edf5ff;     --badge-5-text: #0043ce;
+  --badge-8-bg: #f8f0fe;     --badge-8-text: #6929c4;
+  --badge-10-bg: #fff0f7;    --badge-10-text: #9f1853;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* ── HEADER ── */
+.app-header{background:var(--header-bg);color:#fff;padding:1.25rem 2rem;border-bottom:3px solid var(--interactive)}
+.app-header h1{font-size:1.25rem;font-weight:600}
+.app-header p{font-size:.8125rem;color:#a8a8a8;margin-top:.2rem}
+
+/* ── PRESET BAR ── */
+.preset-bar{background:#262626;padding:.75rem 2rem;display:flex;align-items:center;gap:.625rem;flex-wrap:wrap}
+.preset-label{color:#8d8d8d;font-size:.6875rem;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.btn-preset{border:1px solid #525252;background:transparent;color:#c6c6c6;padding:.3rem .875rem;font-size:.8125rem;cursor:pointer;border-radius:2px;transition:background .15s,color .15s;white-space:nowrap;font-family:inherit}
+.btn-preset:hover{background:#393939;color:#fff}
+.btn-preset.active{background:var(--interactive);border-color:var(--interactive);color:#fff}
+.btn-reset{border:1px solid #da1e28;background:transparent;color:#fa4d56;padding:.3rem .875rem;font-size:.8125rem;cursor:pointer;border-radius:2px;margin-left:auto;font-family:inherit;transition:background .15s}
+.btn-reset:hover{background:#2d0709}
+
+/* ── LAYOUT ── */
+.main-layout{display:grid;grid-template-columns:1fr 380px;gap:1.5rem;max-width:1400px;margin:0 auto;padding:1.5rem 2rem 3rem;align-items:start}
+@media(max-width:960px){.main-layout{grid-template-columns:1fr}.summary-panel{position:static!important}}
+
+/* ── ROLE CARDS ── */
+.role-card{background:var(--layer);border:1px solid var(--border);margin-bottom:1rem;border-radius:2px;overflow:hidden}
+.role-card-header{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.25rem;background:#f4f4f4;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+.role-card-header:hover{background:#e8e8e8}
+.role-icon{width:30px;height:30px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.role-title{font-size:.875rem;font-weight:600}
+.role-desc{font-size:.6875rem;color:var(--helper)}
+.role-users-control{display:flex;align-items:center;gap:.5rem;margin-left:auto}
+.role-users-label{font-size:.6875rem;color:var(--helper);white-space:nowrap}
+.stepper{display:flex;align-items:center;border:1px solid var(--border-strong);border-radius:2px;overflow:hidden}
+.stepper input[type=number]{width:52px;border:none;outline:none;text-align:center;font-size:.8125rem;padding:.25rem;background:#fff;color:var(--text);-moz-appearance:textfield;font-family:inherit}
+.stepper input[type=number]::-webkit-outer-spin-button,.stepper input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.stepper button{width:26px;border:none;background:#f4f4f4;color:var(--text);cursor:pointer;font-size:1rem;padding:.2rem 0;transition:background .1s;font-family:inherit}
+.stepper button:hover{background:#e0e0e0}
+.role-collapse-btn{background:none;border:none;cursor:pointer;color:var(--helper);font-size:.75rem;padding:.25rem;transition:transform .2s}
+.role-collapse-btn.open{transform:rotate(180deg)}
+
+/* ── QUOTA STATUS BAR (per role) ── */
+.role-quota-bar-wrap{padding:.625rem 1.25rem;background:#fafafa;border-top:1px solid var(--border);display:flex;align-items:center;gap:.75rem}
+.role-quota-track{flex:1;height:6px;background:#e0e0e0;border-radius:3px;overflow:hidden}
+.role-quota-fill{height:100%;border-radius:3px;transition:width .3s,background .3s}
+.role-quota-label{font-size:.6875rem;color:var(--helper);white-space:nowrap}
+.status-pill{font-size:.625rem;font-weight:700;padding:.125rem .5rem;border-radius:10px;white-space:nowrap}
+.status-green{background:var(--green-bg);color:var(--green)}
+.status-amber{background:var(--amber-bg);color:var(--amber)}
+.status-red{background:var(--red-bg);color:var(--red)}
+
+/* ── FUNCTION TABLE ── */
+.fn-table-wrap{padding:0}
+.fn-table{width:100%;border-collapse:collapse}
+.fn-table th{font-size:.6875rem;font-weight:600;color:var(--helper);text-transform:uppercase;letter-spacing:.03em;padding:.5rem 1.25rem;background:#fafafa;border-bottom:1px solid var(--border);text-align:left}
+.fn-table th:last-child,.fn-table td:last-child{text-align:right}
+.fn-table td{padding:.5rem 1.25rem;border-bottom:1px solid var(--border);font-size:.8125rem;vertical-align:middle}
+.fn-table tr:last-child td{border-bottom:none}
+.fn-table tr:hover td{background:#f9f9f9}
+.fn-name{font-family:'IBM Plex Mono','Courier New',monospace;font-size:.75rem;color:#161616}
+.fn-desc{font-size:.625rem;color:var(--helper);margin-top:.1rem}
+.badge{font-size:.625rem;font-weight:700;padding:.1rem .4rem;border-radius:10px;white-space:nowrap}
+.b-free{background:var(--badge-free-bg);color:var(--badge-free-text)}
+.b-5{background:var(--badge-5-bg);color:var(--badge-5-text)}
+.b-8{background:var(--badge-8-bg);color:var(--badge-8-text)}
+.b-10{background:var(--badge-10-bg);color:var(--badge-10-text)}
+.row-wu{font-size:.75rem;color:var(--helper);font-family:'IBM Plex Mono','Courier New',monospace}
+
+/* ── SUMMARY PANEL ── */
+.summary-panel{position:sticky;top:1.5rem}
+.s-card{background:var(--layer);border:1px solid var(--border);border-radius:2px;margin-bottom:1rem;overflow:hidden}
+.s-card-hdr{background:var(--interactive);color:#fff;padding:.5rem 1.25rem;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.s-card-hdr.dark{background:#262626}
+
+/* composition table */
+.comp-table{width:100%;border-collapse:collapse;font-size:.8125rem}
+.comp-table th{font-size:.625rem;font-weight:600;color:var(--helper);text-transform:uppercase;padding:.5rem .875rem;background:#fafafa;border-bottom:1px solid var(--border);text-align:left}
+.comp-table th:not(:first-child){text-align:right}
+.comp-table td{padding:.5rem .875rem;border-bottom:1px solid var(--border);font-size:.8125rem}
+.comp-table td:not(:first-child){text-align:right;font-family:'IBM Plex Mono','Courier New',monospace;font-size:.75rem}
+.comp-table tr.total-row td{font-weight:700;background:#f4f4f4;border-top:2px solid var(--border-strong)}
+.comp-table tr:last-child td{border-bottom:none}
+.role-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.4rem}
+
+/* quota section */
+.quota-section{padding:1rem 1.25rem}
+.quota-info-box{background:#edf5ff;border:1px solid #a6c8ff;border-radius:2px;padding:.5rem .75rem;font-size:.6875rem;color:#0043ce;margin-bottom:.875rem;line-height:1.6}
+.quota-bar-track{height:10px;background:#e0e0e0;border-radius:5px;overflow:hidden;margin:.5rem 0}
+.quota-bar-fill{height:100%;border-radius:5px;transition:width .4s ease,background .4s ease}
+.quota-row{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;margin:.25rem 0}
+.quota-label{color:var(--helper)}
+.quota-val{font-weight:600;font-family:'IBM Plex Mono','Courier New',monospace;font-size:.75rem}
+
+/* growth section */
+.growth-section{padding:1rem 1.25rem;border-top:1px solid var(--border)}
+.growth-slider-wrap{display:flex;align-items:center;gap:.75rem;margin:.5rem 0}
+.growth-slider-wrap input[type=range]{flex:1;accent-color:var(--interactive)}
+.growth-val-badge{font-size:.875rem;font-weight:700;color:var(--interactive);min-width:40px;text-align:right}
+.growth-chips{display:flex;gap:.375rem;flex-wrap:wrap;margin:.5rem 0}
+.growth-chip{font-size:.6875rem;padding:.2rem .5rem;border:1px solid var(--border-strong);border-radius:10px;background:transparent;cursor:pointer;font-family:inherit;color:var(--muted);transition:all .15s}
+.growth-chip:hover{background:var(--bg)}
+.growth-chip.active{background:var(--interactive);border-color:var(--interactive);color:#fff}
+
+/* monthly section */
+.monthly-section{padding:1rem 1.25rem;border-top:1px solid var(--border)}
+.metric-row{display:flex;justify-content:space-between;align-items:baseline;padding:.3rem 0;border-bottom:1px solid #f0f0f0}
+.metric-row:last-child{border-bottom:none}
+.metric-name{font-size:.75rem;color:var(--muted)}
+.metric-num{font-size:1rem;font-weight:700;font-family:'IBM Plex Mono','Courier New',monospace}
+.metric-num.big{font-size:1.25rem}
+
+/* ── AI PANEL ── */
+.ai-panel{background:var(--layer);border:1px solid var(--border);border-radius:2px;margin-bottom:1rem;overflow:hidden}
+.ai-panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.25rem;background:#1a1a2e;color:#fff;cursor:pointer;user-select:none;border:none;width:100%;font-family:inherit}
+.ai-panel-hdr:hover{background:#16213e}
+.ai-panel-title{display:flex;align-items:center;gap:.625rem;font-size:.875rem;font-weight:600}
+.ai-beta{font-size:.5625rem;font-weight:700;background:var(--interactive);color:#fff;padding:.1rem .4rem;border-radius:2px;letter-spacing:.05em}
+.ai-chevron{font-size:.625rem;color:#8d8d8d;transition:transform .2s}
+.ai-chevron.open{transform:rotate(180deg)}
+.ai-body{padding:1.25rem;background:#f4f4f4;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.875rem}
+.ai-field{display:flex;flex-direction:column;gap:.3rem}
+.ai-label{font-size:.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.ai-input,.ai-textarea{width:100%;padding:.5rem .75rem;font-family:'IBM Plex Mono','Courier New',monospace;font-size:.8125rem;color:var(--text);background:#fff;border:1px solid #8d8d8d;border-radius:2px;outline:none;transition:border-color .15s}
+.ai-input:focus,.ai-textarea:focus{border-color:var(--interactive);box-shadow:0 0 0 2px rgba(15,98,254,.2)}
+.ai-key-wrap{position:relative}
+.ai-key-wrap .ai-input{padding-right:36px}
+.ai-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--helper);padding:.25rem;font-size:.875rem}
+.ai-hint{font-size:.6875rem;color:var(--interactive);margin-top:.2rem}
+.ai-hint a{color:inherit}
+.ai-textarea{font-family:inherit;font-size:.8125rem;resize:vertical;min-height:80px;line-height:1.5}
+.ai-chips{display:flex;flex-wrap:wrap;gap:.375rem}
+.ai-chip{font-size:.6875rem;padding:.25rem .625rem;border:1px solid var(--border-strong);border-radius:10px;background:#fff;cursor:pointer;font-family:inherit;color:var(--muted);transition:all .12s;white-space:nowrap}
+.ai-chip:hover{background:var(--bg);border-color:#8d8d8d}
+.ai-chip.active{background:var(--interactive);border-color:var(--interactive);color:#fff}
+
+/* enrichment questions */
+.ai-enrich{background:#fff;border:1px solid #a6c8ff;border-radius:2px;padding:.875rem;display:flex;flex-direction:column;gap:.625rem}
+.ai-enrich-title{font-size:.75rem;font-weight:600;color:#0043ce}
+.ai-enrich-q{font-size:.75rem;color:var(--muted);margin-bottom:.25rem}
+.ai-enrich-opts{display:flex;flex-wrap:wrap;gap:.375rem}
+.ai-enrich-opt{font-size:.6875rem;padding:.2rem .5rem;border:1px solid var(--border-strong);border-radius:10px;background:#fff;cursor:pointer;font-family:inherit;color:var(--muted);transition:all .12s}
+.ai-enrich-opt:hover{background:var(--bg)}
+.ai-enrich-opt.sel{background:#0043ce;border-color:#0043ce;color:#fff}
+
+.ai-analyze-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;height:40px;background:var(--interactive);color:#fff;border:none;border-radius:2px;font-size:.875rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
+.ai-analyze-btn:hover:not(:disabled){background:var(--interactive-hover)}
+.ai-analyze-btn:disabled{background:#8d8d8d;cursor:not-allowed}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+
+/* result states */
+.ai-result{margin-top:.25rem}
+.ai-banner{display:flex;align-items:flex-start;gap:.5rem;padding:.625rem .875rem;border-radius:2px;font-size:.75rem;line-height:1.5}
+.ai-banner.warn{background:var(--amber-bg);border:1px solid #f1c21b;border-left:3px solid #f1c21b;color:#3d2f00}
+.ai-banner.error{background:var(--red-bg);border:1px solid #fa4d56;border-left:3px solid var(--red);color:#750e13}
+.ai-banner.success{background:var(--green-bg);border:1px solid #42be65;border-left:3px solid var(--green);color:#044317}
+.ai-result-table{width:100%;border-collapse:collapse;font-size:.75rem;background:#fff;border:1px solid var(--border);border-radius:2px;overflow:hidden;margin-bottom:.75rem}
+.ai-result-table th{background:#e0e0e0;padding:.4rem .75rem;font-size:.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:.03em;text-align:left;border-bottom:1px solid var(--border-strong)}
+.ai-result-table th:last-child{text-align:right}
+.ai-result-table td{padding:.4rem .75rem;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+.ai-result-table td:last-child{text-align:right;font-weight:600}
+.ai-result-table tfoot td{background:#e0e0e0;font-weight:700;border-top:1px solid var(--border-strong)}
+.ai-fn-name{font-family:'IBM Plex Mono','Courier New',monospace;font-size:.6875rem}
+.ai-action-row{display:flex;gap:.625rem;flex-wrap:wrap}
+.btn-apply{padding:.5rem 1rem;background:var(--interactive);color:#fff;border:none;border-radius:2px;font-size:.8125rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-apply:hover{background:var(--interactive-hover)}
+.btn-ghost{padding:.5rem 1rem;background:transparent;color:var(--interactive);border:1px solid var(--interactive);border-radius:2px;font-size:.8125rem;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-ghost:hover{background:#edf5ff}
+.role-select{padding:.4rem .625rem;font-family:inherit;font-size:.8125rem;border:1px solid #8d8d8d;border-radius:2px;background:#fff;color:var(--text);outline:none}
+.role-select:focus{border-color:var(--interactive)}
+.raw-toggle{font-size:.6875rem;color:var(--interactive);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;margin-top:.375rem}
+.raw-pre{background:#1c1c1c;color:#f4f4f4;font-family:'IBM Plex Mono','Courier New',monospace;font-size:.6875rem;padding:.625rem;border-radius:2px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:120px;overflow-y:auto;margin-top:.375rem}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>IBM ELM MCP Usage Calculator</h1>
+  <p>Per-role headcount · Daily 10k WU quota · Growth projection · Bob AI workflow estimator</p>
+</header>
+
+<div class="preset-bar">
+  <span class="preset-label">Apply role defaults:</span>
+  <button class="btn-preset" data-preset="developer">💻 Developer</button>
+  <button class="btn-preset" data-preset="analyst">📋 Req. Analyst</button>
+  <button class="btn-preset" data-preset="tester">🧪 Test Engineer</button>
+  <button class="btn-preset" data-preset="architect">🏗️ Sys. Architect</button>
+  <button class="btn-preset" data-preset="manager">📊 Eng. Manager</button>
+  <button class="btn-reset" id="btn-reset">✕ Reset All</button>
+</div>
+
+<div class="main-layout">
+
+  <!-- ══ LEFT: ROLE CARDS ══ -->
+  <div id="left-col">
+
+    <!-- Role cards injected by JS -->
+
+    <!-- ══ AI ESTIMATOR PANEL ══ -->
+    <div class="ai-panel" id="ai-panel">
+      <button class="ai-panel-hdr" id="ai-toggle" aria-expanded="false">
+        <span class="ai-panel-title">✨ Estimate with Bob AI <span class="ai-beta">BETA</span></span>
+        <span class="ai-chevron" id="ai-chevron">▼</span>
+      </button>
+      <div id="ai-body" style="display:none">
+        <div class="ai-body">
+
+          <div class="ai-field">
+            <label class="ai-label" for="ai-endpoint">Inference API URL</label>
+            <input class="ai-input" type="url" id="ai-endpoint"
+              value="https://api.us-east.bob.ibm.com/v1/chat/completions"
+              placeholder="https://api.us-east.bob.ibm.com/v1/chat/completions" />
+          </div>
+
+          <div class="ai-field">
+            <label class="ai-label" for="ai-key">Bob Inference API Key</label>
+            <div class="ai-key-wrap">
+              <input class="ai-input" type="password" id="ai-key"
+                placeholder="bob_prod_bob-apikey_…" autocomplete="off" spellcheck="false" />
+              <button class="ai-eye" id="ai-eye" type="button" title="Toggle visibility">👁</button>
+            </div>
+            <span class="ai-hint">Generate an Inference-scoped key at <a href="https://bob.ibm.com" target="_blank" rel="noopener">bob.ibm.com ↗</a></span>
+          </div>
+
+          <div class="ai-field">
+            <label class="ai-label">Example workflows — click to load</label>
+            <div class="ai-chips">
+              <button class="ai-chip" data-chip="defect">🐛 Daily defect triage</button>
+              <button class="ai-chip" data-chip="req">📋 Requirements authoring</button>
+              <button class="ai-chip" data-chip="test">🧪 Test coverage check</button>
+              <button class="ai-chip" data-chip="arch">🏗️ Architecture review</button>
+              <button class="ai-chip" data-chip="mgr">📊 Manager status check</button>
+              <button class="ai-chip" data-chip="ci">⚙️ CI/CD pipeline</button>
+              <button class="ai-chip" data-chip="sprint">⚡ Sprint planning</button>
+              <button class="ai-chip" data-chip="trace">🔗 Traceability audit</button>
+            </div>
+          </div>
+
+          <div class="ai-field">
+            <label class="ai-label" for="ai-prompt">Describe your ELM workflow</label>
+            <textarea class="ai-textarea" id="ai-prompt" rows="4"
+              placeholder="e.g. 10 requirements analysts each producing 10 new requirements per day. They search DOORS Next for existing requirements to avoid duplicates, check component type systems, then review linked work items and test coverage…"></textarea>
+          </div>
+
+          <!-- Enrichment questions injected here -->
+          <div id="ai-enrich-area"></div>
+
+          <button class="ai-analyze-btn" id="ai-analyze">
+            <span id="ai-btn-label">Analyze Workflow</span>
+          </button>
+
+          <div class="ai-result" id="ai-result"></div>
+
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /left-col -->
+
+  <!-- ══ RIGHT: SUMMARY PANEL ══ -->
+  <aside class="summary-panel">
+
+    <div class="s-card">
+      <div class="s-card-hdr">Team Composition</div>
+      <table class="comp-table">
+        <thead>
+          <tr><th>Role</th><th>Users</th><th>WU/user/day</th><th>Role WU/day</th></tr>
+        </thead>
+        <tbody id="comp-tbody"></tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td>Total</td>
+            <td id="s-total-users">0</td>
+            <td>—</td>
+            <td id="s-total-daily-wu">0</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="s-card">
+      <div class="s-card-hdr dark">Daily Quota</div>
+      <div class="quota-section">
+        <div class="quota-info-box">
+          <strong>10,000 WU = 25 tokens · resets every 24 hours per user</strong><br>
+          1 WU = 0.0025 tokens · 1 token = 400 WU
+        </div>
+        <div class="quota-row">
+          <span class="quota-label">Org daily WU used</span>
+          <span class="quota-val" id="s-org-wu">0</span>
+        </div>
+        <div class="quota-row">
+          <span class="quota-label">Org daily quota</span>
+          <span class="quota-val" id="s-org-quota">0</span>
+        </div>
+        <div class="quota-bar-track"><div class="quota-bar-fill" id="s-quota-bar" style="width:0%;background:var(--green)"></div></div>
+        <div class="quota-row">
+          <span class="quota-label">Quota utilisation</span>
+          <span class="quota-val" id="s-quota-pct">0%</span>
+        </div>
+        <div class="quota-row" style="margin-top:.5rem">
+          <span class="quota-label">Daily tokens</span>
+          <span class="quota-val" id="s-daily-tokens">0</span>
+        </div>
+        <div style="margin-top:.625rem" id="s-quota-status-wrap">
+          <span class="status-pill status-green" id="s-quota-status">✓ Within Quota</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-card">
+      <div class="s-card-hdr">Growth Projection</div>
+      <div class="growth-section">
+        <div class="growth-slider-wrap">
+          <input type="range" id="growth-slider" min="1" max="3" step="0.05" value="1" style="flex:1" />
+          <span class="growth-val-badge" id="growth-value">1.0×</span>
+        </div>
+        <div class="growth-chips">
+          <button class="growth-chip active" data-factor="1">1.0×</button>
+          <button class="growth-chip" data-factor="1.25">1.25×</button>
+          <button class="growth-chip" data-factor="1.5">1.5×</button>
+          <button class="growth-chip" data-factor="2">2.0×</button>
+          <button class="growth-chip" data-factor="3">3.0×</button>
+        </div>
+        <div class="quota-row" style="margin-top:.5rem">
+          <span class="quota-label">Projected daily WU</span>
+          <span class="quota-val" id="s-proj-wu">0</span>
+        </div>
+        <div class="quota-bar-track"><div class="quota-bar-fill" id="s-proj-bar" style="width:0%;background:var(--green)"></div></div>
+        <div class="quota-row">
+          <span class="quota-label">Projected utilisation</span>
+          <span class="quota-val" id="s-proj-pct">0%</span>
+        </div>
+        <div class="quota-row">
+          <span class="quota-label">Projected daily tokens</span>
+          <span class="quota-val" id="s-proj-tokens">0</span>
+        </div>
+        <div style="margin-top:.625rem" id="s-proj-status-wrap">
+          <span class="status-pill status-green" id="s-proj-status">✓ Within Quota</span>
+        </div>
+        <div class="ai-banner warn" id="s-proj-warning" style="display:none;margin-top:.625rem">
+          ⚠ Growth will exceed daily quota — consider adding users or reducing call volume
+        </div>
+      </div>
+    </div>
+
+    <div class="s-card">
+      <div class="s-card-hdr">Monthly Estimates</div>
+      <div class="monthly-section">
+        <div class="metric-row">
+          <span class="metric-name">Monthly WU</span>
+          <span class="metric-num big" id="s-monthly-wu">0</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">Monthly tokens</span>
+          <span class="metric-num big" id="s-monthly-tokens">0</span>
+        </div>
+        <div class="metric-row" style="border-bottom:none;margin-top:.25rem">
+          <span style="font-size:.6875rem;color:var(--helper)">Based on 21 working days/month</span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+</div><!-- /main-layout -->
+
+<script>
+// ══════════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════════
+const WU = {
+  list_project_areas:0, get_user:0, get_project_area:0,
+  list_modeling_projects:8, list_workitem_releases:8, list_workitem_categories:8,
+  get_workitem_schema:8, get_workitem:5, get_project_components:5,
+  get_testartifact_schema:8, search_workitems:10, get_scm_artifact:5,
+  get_project_component_configuration:8, get_project_component_types:8,
+  get_testartifact:5, get_project_component_folders:5,
+  list_linked_requirements:8, get_requirement:5, list_linked_testartifacts:8,
+  search_testartifact:10, search_requirement:10, list_linked_workitems:8
+};
+
+const FN_DESC = {
+  list_project_areas:'List all ELM project areas', get_user:'Resolve user by name/ID',
+  get_project_area:'Fetch project area details', list_modeling_projects:'List SysML v2 projects',
+  list_workitem_releases:'List releases (Found In)', list_workitem_categories:'List WI categories',
+  get_workitem_schema:'Work item type schema', get_workitem:'Retrieve a work item',
+  get_project_components:'Component hierarchy', get_testartifact_schema:'Test artifact type schema',
+  search_workitems:'Advanced work item query', get_scm_artifact:'Changeset/workspace/stream',
+  get_project_component_configuration:'Streams & baselines', get_project_component_types:'Type system & attributes',
+  get_testartifact:'Retrieve a test artifact', get_project_component_folders:'Folder hierarchy',
+  list_linked_requirements:'Requirements linked to WI/test', get_requirement:'Retrieve requirement by ID',
+  list_linked_testartifacts:'Test artifacts linked to WI/req', search_testartifact:'Search test artifacts',
+  search_requirement:'Full-text requirement search', list_linked_workitems:'Work items linked to test/req'
+};
+
+const ROLES = [
+  { id:'developer', label:'Developer',     icon:'💻', color:'#0043ce', bg:'#edf5ff',
+    desc:'EWM/CCM — work items, SCM, linked requirements',
+    fns:{ get_workitem:60, get_scm_artifact:35, search_workitems:30, list_linked_workitems:15,
+          get_requirement:10, list_linked_requirements:10, search_requirement:5,
+          get_testartifact:3, list_linked_testartifacts:5, search_testartifact:2,
+          get_workitem_schema:3, list_workitem_releases:2, list_workitem_categories:2,
+          list_project_areas:5, get_user:5, get_project_area:3, get_project_components:2,
+          get_project_component_folders:2, get_project_component_configuration:1,
+          get_project_component_types:1, get_testartifact_schema:0, list_modeling_projects:0 }},
+  { id:'analyst', label:'Req. Analyst',    icon:'📋', color:'#9f1853', bg:'#fff0f7',
+    desc:'DOORS Next — requirements, components, traceability',
+    fns:{ get_requirement:80, search_requirement:50, list_linked_requirements:40,
+          get_project_components:10, get_project_component_folders:10,
+          get_project_component_configuration:8, get_project_component_types:8,
+          list_linked_workitems:20, list_linked_testartifacts:15, search_testartifact:5,
+          get_testartifact:5, search_workitems:5, get_workitem:5, get_workitem_schema:2,
+          list_workitem_releases:1, list_workitem_categories:1, list_project_areas:5,
+          get_user:5, get_project_area:5, get_scm_artifact:0,
+          get_testartifact_schema:0, list_modeling_projects:2 }},
+  { id:'tester', label:'Test Engineer',    icon:'🧪', color:'#005a3c', bg:'#defbe6',
+    desc:'ETM/QM — test artifacts, traceability, execution',
+    fns:{ get_testartifact:70, search_testartifact:40, list_linked_testartifacts:30,
+          list_linked_requirements:25, get_requirement:20, search_requirement:10,
+          list_linked_workitems:10, get_workitem:10, search_workitems:5,
+          get_testartifact_schema:5, get_workitem_schema:1, list_workitem_releases:2,
+          list_workitem_categories:1, list_project_areas:5, get_user:5, get_project_area:3,
+          get_project_components:3, get_project_component_folders:2,
+          get_project_component_configuration:2, get_project_component_types:2,
+          get_scm_artifact:0, list_modeling_projects:0 }},
+  { id:'architect', label:'Sys. Architect', icon:'🏗️', color:'#6929c4', bg:'#f8f0fe',
+    desc:'SysML + DOORS Next — modeling, component types, deep links',
+    fns:{ list_modeling_projects:40, get_project_component_types:25,
+          get_project_component_configuration:25, get_project_components:30,
+          get_project_component_folders:20, search_requirement:40, get_requirement:60,
+          list_linked_requirements:50, list_linked_workitems:20, list_linked_testartifacts:20,
+          search_workitems:10, get_workitem:10, get_testartifact:10, search_testartifact:10,
+          get_testartifact_schema:3, get_workitem_schema:3, list_workitem_releases:1,
+          list_workitem_categories:1, list_project_areas:8, get_user:5,
+          get_project_area:8, get_scm_artifact:5 }},
+  { id:'manager', label:'Eng. Manager',    icon:'📊', color:'#525252', bg:'#e0e0e0',
+    desc:'Read-only governance — status checks, releases, categories',
+    fns:{ list_project_areas:15, get_user:20, get_project_area:15, get_workitem:20,
+          search_workitems:15, get_workitem_schema:3, list_workitem_releases:5,
+          list_workitem_categories:5, list_linked_workitems:5, get_scm_artifact:3,
+          get_requirement:10, search_requirement:5, list_linked_requirements:5,
+          get_testartifact:5, search_testartifact:5, list_linked_testartifacts:3,
+          list_modeling_projects:3, get_project_components:3, get_project_component_folders:2,
+          get_project_component_configuration:2, get_project_component_types:2,
+          get_testartifact_schema:0 }}
+];
+
+const DAILY_QUOTA = 10000;
+const WU_PER_TOKEN = 400;
+const WORKING_DAYS = 21;
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+const state = {
+  users:        { developer:5, analyst:3, tester:4, architect:2, manager:2 },
+  calls:        {},   // role → fn → count (built from ROLES defaults)
+  growthFactor: 1.0
+};
+
+// init calls from defaults
+ROLES.forEach(r => {
+  state.calls[r.id] = {};
+  Object.keys(WU).forEach(fn => { state.calls[r.id][fn] = r.fns[fn] || 0; });
+});
+
+// ══════════════════════════════════════════════════════
+//  CALC
+// ══════════════════════════════════════════════════════
+function fmt(n){ return new Intl.NumberFormat('en-US').format(Math.round(n)); }
+function fmtD(n,d=2){ return n.toFixed(d); }
+
+function calculate(){
+  const out = {};
+  let orgDailyWU=0, orgTotalUsers=0;
+
+  ROLES.forEach(r => {
+    const users = state.users[r.id];
+    let wu = 0;
+    Object.keys(WU).forEach(fn => { wu += (state.calls[r.id][fn]||0) * WU[fn]; });
+    out[r.id] = { wuPerUser: wu, totalWU: wu * users, users };
+    orgDailyWU   += wu * users;
+    orgTotalUsers += users;
+    // update per-role quota bar
+    const pct = DAILY_QUOTA > 0 ? Math.min(100,(wu/DAILY_QUOTA)*100) : 0;
+    const fill = document.getElementById(`qfill-${r.id}`);
+    const qlbl = document.getElementById(`qlbl-${r.id}`);
+    const qpill= document.getElementById(`qpill-${r.id}`);
+    if(fill){ fill.style.width=pct+'%'; fill.style.background=pct<60?'var(--green)':pct<90?'#f1c21b':'var(--red)'; }
+    if(qlbl){ qlbl.textContent=`${fmt(wu)} WU/user · ${fmtD(pct,1)}% of 10k quota`; }
+    if(qpill){
+      qpill.className='status-pill '+(pct<60?'status-green':pct<90?'status-amber':'status-red');
+      qpill.textContent=pct<60?'✓ Within quota':pct<90?'⚠ Approaching':'✗ Quota risk';
+    }
+    // update comp table
+    const tdU = document.getElementById(`ct-users-${r.id}`);
+    const tdW = document.getElementById(`ct-wpu-${r.id}`);
+    const tdT = document.getElementById(`ct-total-${r.id}`);
+    if(tdU) tdU.textContent = users;
+    if(tdW) tdW.textContent = fmt(wu);
+    if(tdT) tdT.textContent = fmt(wu*users);
+  });
+
+  const orgQuota = orgTotalUsers * DAILY_QUOTA;
+  const quotaPct = orgQuota > 0 ? Math.min(200,(orgDailyWU/orgQuota)*100) : 0;
+  const projWU   = orgDailyWU * state.growthFactor;
+  const projPct  = orgQuota > 0 ? Math.min(200,(projWU/orgQuota)*100) : 0;
+
+  // Summary panel
+  set('s-total-users',   fmt(orgTotalUsers));
+  set('s-total-daily-wu',fmt(orgDailyWU));
+  set('s-org-wu',        fmt(orgDailyWU));
+  set('s-org-quota',     fmt(orgQuota));
+  set('s-quota-pct',     fmtD(quotaPct,1)+'%');
+  set('s-daily-tokens',  fmtD(orgDailyWU/WU_PER_TOKEN,2));
+  setBar('s-quota-bar',  quotaPct);
+  setStatus('s-quota-status', quotaPct);
+
+  set('s-proj-wu',       fmt(projWU));
+  set('s-proj-pct',      fmtD(projPct,1)+'%');
+  set('s-proj-tokens',   fmtD(projWU/WU_PER_TOKEN,2));
+  setBar('s-proj-bar',   projPct);
+  setStatus('s-proj-status', projPct);
+  const warn = document.getElementById('s-proj-warning');
+  if(warn) warn.style.display = projPct > 100 ? '' : 'none';
+
+  set('s-monthly-wu',     fmt(orgDailyWU * WORKING_DAYS));
+  set('s-monthly-tokens', fmtD((orgDailyWU * WORKING_DAYS)/WU_PER_TOKEN,1));
+}
+
+function set(id,v){ const el=document.getElementById(id); if(el) el.textContent=v; }
+
+function setBar(id,pct){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.style.width=Math.min(100,pct)+'%';
+  el.style.background=pct<60?'var(--green)':pct<90?'#f1c21b':'var(--red)';
+}
+function setStatus(id,pct){
+  const el=document.getElementById(id);
+  if(!el) return;
+  if(pct<60){ el.className='status-pill status-green'; el.textContent='✓ Within Quota'; }
+  else if(pct<90){ el.className='status-pill status-amber'; el.textContent='⚠ Approaching Limit'; }
+  else{ el.className='status-pill status-red'; el.textContent='✗ Over Quota'; }
+}
+
+// ══════════════════════════════════════════════════════
+//  BUILD UI
+// ══════════════════════════════════════════════════════
+function buildRoleCards(){
+  const col = document.getElementById('left-col');
+  const aiPanel = document.getElementById('ai-panel');
+
+  ROLES.forEach(role => {
+    const card = document.createElement('div');
+    card.className = 'role-card';
+    card.dataset.roleId = role.id;
+    card.dataset.roleLabel = role.label;
+
+    // header
+    card.innerHTML = `
+      <div class="role-card-header" id="rhdr-${role.id}">
+        <div class="role-icon" style="background:${role.bg};color:${role.color}">${role.icon}</div>
+        <div style="flex:1;min-width:0">
+          <div class="role-title">${role.label}</div>
+          <div class="role-desc">${role.desc}</div>
+        </div>
+        <div class="role-users-control">
+          <span class="role-users-label">Users:</span>
+          <div class="stepper">
+            <button type="button" data-role="${role.id}" data-delta="-1">−</button>
+            <input type="number" id="users-${role.id}" value="${state.users[role.id]}" min="0" step="1" aria-label="${role.label} user count" />
+            <button type="button" data-role="${role.id}" data-delta="1">+</button>
+          </div>
+        </div>
+        <button class="role-collapse-btn open" id="cbtn-${role.id}" aria-label="Collapse ${role.label}">▼</button>
+      </div>
+      <div id="rbody-${role.id}">
+        <div class="fn-table-wrap">
+          <table class="fn-table">
+            <thead><tr>
+              <th>Function</th><th>WU</th><th>Calls/day</th><th>Row WU</th>
+            </tr></thead>
+            <tbody id="ftbody-${role.id}"></tbody>
+          </table>
+        </div>
+        <div class="role-quota-bar-wrap">
+          <div class="role-quota-track"><div class="role-quota-fill" id="qfill-${role.id}" style="width:0%;background:var(--green)"></div></div>
+          <span class="role-quota-label" id="qlbl-${role.id}">0 WU/user</span>
+          <span class="status-pill status-green" id="qpill-${role.id}">✓ Within quota</span>
+        </div>
+      </div>`;
+
+    col.insertBefore(card, aiPanel);
+
+    // function rows
+    const tbody = document.getElementById(`ftbody-${role.id}`);
+    Object.keys(WU).forEach(fn => {
+      const wu = WU[fn];
+      const calls = state.calls[role.id][fn] || 0;
+      const badgeCls = wu===0?'b-free':wu<=5?'b-5':wu<=8?'b-8':'b-10';
+      const badgeLbl = wu===0?'Free':`${wu} WU`;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>
+          <div class="fn-name">${fn}</div>
+          <div class="fn-desc">${FN_DESC[fn]||''}</div>
+        </td>
+        <td><span class="badge ${badgeCls}">${badgeLbl}</span></td>
+        <td>
+          <div class="stepper">
+            <button type="button" data-role="${role.id}" data-fn="${fn}" data-delta="-1">−</button>
+            <input type="number" id="inp-${role.id}-${fn}" value="${calls}" min="0" step="1" aria-label="${fn} calls/day for ${role.label}" />
+            <button type="button" data-role="${role.id}" data-fn="${fn}" data-delta="1">+</button>
+          </div>
+        </td>
+        <td><span class="row-wu" id="rwu-${role.id}-${fn}">${fmt(calls*wu)}</span></td>`;
+      tbody.appendChild(tr);
+    });
+
+    // collapse toggle
+    document.getElementById(`cbtn-${role.id}`).addEventListener('click', e => {
+      e.stopPropagation();
+      const body = document.getElementById(`rbody-${role.id}`);
+      const btn  = document.getElementById(`cbtn-${role.id}`);
+      const hidden = body.style.display === 'none';
+      body.style.display = hidden ? '' : 'none';
+      btn.classList.toggle('open', hidden);
+    });
+    document.getElementById(`rhdr-${role.id}`).addEventListener('click', e => {
+      if(e.target.closest('.stepper') || e.target.closest('.role-collapse-btn')) return;
+      document.getElementById(`cbtn-${role.id}`).click();
+    });
+  });
+
+  // comp table rows
+  const tbody = document.getElementById('comp-tbody');
+  ROLES.forEach(role => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="role-dot" style="background:${role.color}"></span>${role.label}</td>
+      <td id="ct-users-${role.id}">${state.users[role.id]}</td>
+      <td id="ct-wpu-${role.id}">0</td>
+      <td id="ct-total-${role.id}">0</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  EVENTS
+// ══════════════════════════════════════════════════════
+function bindEvents(){
+  // function call inputs
+  document.getElementById('left-col').addEventListener('input', e => {
+    const inp = e.target;
+    if(!inp.id || !inp.id.startsWith('inp-')) return;
+    const parts = inp.id.split('-');
+    const roleId = parts[1];
+    const fn     = parts.slice(2).join('-');
+    const val = Math.max(0, parseInt(inp.value,10)||0);
+    inp.value = val;
+    state.calls[roleId][fn] = val;
+    const rwu = document.getElementById(`rwu-${roleId}-${fn}`);
+    if(rwu) rwu.textContent = fmt(val * WU[fn]);
+    calculate();
+  });
+
+  // stepper buttons (fn calls)
+  document.getElementById('left-col').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-fn]');
+    if(!btn) return;
+    const { role, fn, delta } = btn.dataset;
+    const inp = document.getElementById(`inp-${role}-${fn}`);
+    if(!inp) return;
+    const val = Math.max(0,(parseInt(inp.value,10)||0)+parseInt(delta,10));
+    inp.value = val;
+    state.calls[role][fn] = val;
+    const rwu = document.getElementById(`rwu-${role}-${fn}`);
+    if(rwu) rwu.textContent = fmt(val * WU[fn]);
+    calculate();
+  });
+
+  // user count steppers
+  document.getElementById('left-col').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-role]:not([data-fn])');
+    if(!btn) return;
+    const { role, delta } = btn.dataset;
+    const inp = document.getElementById(`users-${role}`);
+    if(!inp) return;
+    const val = Math.max(0,(parseInt(inp.value,10)||0)+parseInt(delta,10));
+    inp.value = val;
+    state.users[role] = val;
+    calculate();
+  });
+  document.getElementById('left-col').addEventListener('input', e => {
+    if(!e.target.id || !e.target.id.startsWith('users-')) return;
+    const role = e.target.id.replace('users-','');
+    state.users[role] = Math.max(0,parseInt(e.target.value,10)||0);
+    calculate();
+  });
+
+  // growth slider
+  document.getElementById('growth-slider').addEventListener('input', e => {
+    state.growthFactor = parseFloat(e.target.value);
+    document.getElementById('growth-value').textContent = state.growthFactor.toFixed(2).replace(/\.?0+$/,'')+'×';
+    document.querySelectorAll('.growth-chip').forEach(c => c.classList.toggle('active', parseFloat(c.dataset.factor)===state.growthFactor));
+    calculate();
+  });
+  document.querySelectorAll('.growth-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const f = parseFloat(chip.dataset.factor);
+      state.growthFactor = f;
+      document.getElementById('growth-slider').value = f;
+      document.getElementById('growth-value').textContent = f.toFixed(2).replace(/\.?0+$/,'')+'×';
+      document.querySelectorAll('.growth-chip').forEach(c => c.classList.toggle('active', parseFloat(c.dataset.factor)===f));
+      calculate();
+    });
+  });
+
+  // role presets
+  document.querySelectorAll('.btn-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const role = ROLES.find(r => r.id === btn.dataset.preset);
+      if(!role) return;
+      Object.keys(WU).forEach(fn => {
+        const val = role.fns[fn]||0;
+        state.calls[role.id][fn] = val;
+        const inp = document.getElementById(`inp-${role.id}-${fn}`);
+        if(inp){ inp.value = val; }
+        const rwu = document.getElementById(`rwu-${role.id}-${fn}`);
+        if(rwu) rwu.textContent = fmt(val * WU[fn]);
+      });
+      document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      calculate();
+    });
+  });
+
+  // reset
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    ROLES.forEach(role => {
+      Object.keys(WU).forEach(fn => {
+        state.calls[role.id][fn] = role.fns[fn]||0;
+        const inp = document.getElementById(`inp-${role.id}-${fn}`);
+        if(inp) inp.value = role.fns[fn]||0;
+        const rwu = document.getElementById(`rwu-${role.id}-${fn}`);
+        if(rwu) rwu.textContent = fmt((role.fns[fn]||0)*WU[fn]);
+      });
+      state.users[role.id] = {developer:5,analyst:3,tester:4,architect:2,manager:2}[role.id];
+      const ui = document.getElementById(`users-${role.id}`);
+      if(ui) ui.value = state.users[role.id];
+    });
+    state.growthFactor=1;
+    document.getElementById('growth-slider').value=1;
+    document.getElementById('growth-value').textContent='1×';
+    document.querySelectorAll('.growth-chip').forEach(c=>c.classList.toggle('active',c.dataset.factor==='1'));
+    document.querySelectorAll('.btn-preset').forEach(b=>b.classList.remove('active'));
+    calculate();
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  AI PANEL
+// ══════════════════════════════════════════════════════
+const SYSTEM_PROMPT = `You are an IBM ELM MCP usage analyst. Your only job is to read a workflow description and return a JSON object mapping ELM MCP function IDs to estimated calls per day.
+
+RULES:
+1. Return ONLY a raw JSON object. No markdown, no explanation, no extra keys.
+2. Every key MUST be one of these 22 valid IDs: list_project_areas, get_user, get_project_area, list_modeling_projects, list_workitem_releases, list_workitem_categories, get_workitem_schema, get_workitem, get_project_components, get_testartifact_schema, search_workitems, get_scm_artifact, get_project_component_configuration, get_project_component_types, get_testartifact, get_project_component_folders, list_linked_requirements, get_requirement, list_linked_testartifacts, search_testartifact, search_requirement, list_linked_workitems
+3. Values must be positive integers (calls per day per user). Omit functions not used.
+4. If nothing maps, return exactly: {}
+
+INTENT MAPPING:
+- "search defects/bugs/issues/triage" → search_workitems, get_workitem
+- "check/review/read requirements" → get_requirement, list_linked_requirements, search_requirement  
+- "find/search test cases/artifacts" → search_testartifact, get_testartifact, list_linked_testartifacts
+- "test coverage/traceability" → list_linked_testartifacts, list_linked_requirements
+- "browse/list project areas" → list_project_areas, get_project_area
+- "find user/owner/assigned" → get_user
+- "component config/streams/baselines" → get_project_components, get_project_component_configuration
+- "type system/attribute types/schemas" → get_project_component_types, get_workitem_schema
+- "folder structure/folders" → get_project_component_folders
+- "SCM/changeset/code change/commit" → get_scm_artifact
+- "model/SysML/architecture diagram" → list_modeling_projects
+- "sprint/release planning" → list_workitem_releases, get_project_area
+- "categories/classify work items" → list_workitem_categories, get_workitem_schema
+- "linked requirements" → list_linked_requirements
+- "linked work items" → list_linked_workitems
+- "linked tests/test artifacts" → list_linked_testartifacts
+
+SCALE GUIDANCE:
+- If user mentions N engineers/analysts/users doing a task, multiply base calls by N per role
+- "producing 10 requirements/day" → get_requirement:2, search_requirement:5, get_project_component_types:2, list_linked_requirements:3 (per analyst)
+- "daily defect triage" → search_workitems:3, get_workitem:15, list_linked_requirements:10
+- "CI/CD pipeline" → search_workitems:20, get_workitem:50, get_scm_artifact:30, list_linked_requirements:20
+- "sprint planning" → search_workitems:5, list_workitem_releases:3, list_workitem_categories:2, get_project_area:2
+
+EXAMPLES:
+Input: "10 analysts each producing 10 requirements per day, checking duplicates and type systems"
+Output: {"search_requirement":5,"get_requirement":10,"get_project_component_types":3,"list_linked_requirements":5,"get_project_component_configuration":2,"get_project_component_folders":2}
+
+Input: "Developers doing daily defect triage - search for bugs, look at work items, check linked reqs"  
+Output: {"search_workitems":3,"get_workitem":15,"list_linked_requirements":10,"get_requirement":5}`;
+
+const VALID_FNS = new Set(Object.keys(WU));
+
+const CHIP_PROMPTS = {
+  defect: '5 developers doing daily defect triage. Each searches for open defects assigned to their team, fetches the work item details, and checks linked requirements and test cases to assess impact.',
+  req:    '10 requirements analysts each producing 10 new requirements per day. They search DOORS Next for existing requirements to avoid duplicates, check the component type system, navigate folder structure, then review linked work items and test coverage.',
+  test:   '4 test engineers reviewing test coverage. They search for test artifacts linked to the current release, check execution status, find requirements with no test coverage, and link new test cases to requirements.',
+  arch:   '2 systems architects doing an architecture review. They browse SysML modeling projects, review component configurations and type systems, then trace requirements across the model to verify design coverage.',
+  mgr:    '3 engineering managers running a daily status check. They list project areas, search for recently updated work items by status, check release burndown, and review category distributions.',
+  ci:     'An automated CI/CD pipeline running every build. It searches for work items related to the current changeset, fetches the SCM artifact details, verifies linked requirements are approved, and checks test coverage.',
+  sprint: 'A team of 8 doing sprint planning. They query work items by release, review categories, check component configurations, and validate requirement readiness by checking linked test artifacts.',
+  trace:  'A traceability audit across 3 domains. For each requirement, check linked work items, linked test cases, and verify the requirement has test coverage. Covers 200 requirements.'
+};
+
+// Enrichment: detect missing context and ask follow-up questions
+const ENRICHMENT_CHECKS = [
+  { key:'roles',    detect: t => !/(developer|engineer|analyst|architect|manager|tester)/i.test(t),
+    q:'What roles are doing this?',
+    opts:['Developers','Req. Analysts','Test Engineers','Sys. Architects','Eng. Managers','Mixed team'] },
+  { key:'scale',    detect: t => !(/\d+\s*(user|person|engineer|analyst|developer|tester|architect|manager)s?/i.test(t)),
+    q:'How many people?',
+    opts:['1 person','2-5 people','5-10 people','10-25 people','25-50 people','50+ people'] },
+  { key:'freq',     detect: t => !/(daily|per day|every day|weekly|per sprint|per build|each|every)/i.test(t),
+    q:'How often is this workflow run?',
+    opts:['Multiple times/day','Once daily','Per sprint','Per build/CI','Ad-hoc'] },
+  { key:'domain',   detect: t => !/(requirement|work item|defect|test|model|scm|changeset|sysml|component)/i.test(t),
+    q:'Which ELM tools are used?',
+    opts:['EWM/CCM (work items)','DOORS Next (requirements)','ETM/QM (tests)','SysML modeling','Multiple'] }
+];
+
+let enrichAnswers = {};
+let lastAIResult  = null;
+let aiRunning     = false;
+
+function setupAIPanel(){
+  // toggle
+  document.getElementById('ai-toggle').addEventListener('click', () => {
+    const body = document.getElementById('ai-body');
+    const chevron = document.getElementById('ai-chevron');
+    const toggle = document.getElementById('ai-toggle');
+    const open = body.style.display !== 'none';
+    body.style.display = open ? 'none' : '';
+    chevron.classList.toggle('open', !open);
+    toggle.setAttribute('aria-expanded', String(!open));
+  });
+
+  // eye toggle
+  document.getElementById('ai-eye').addEventListener('click', () => {
+    const inp = document.getElementById('ai-key');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  });
+
+  // chips
+  document.querySelectorAll('.ai-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.getElementById('ai-prompt').value = CHIP_PROMPTS[chip.dataset.chip]||'';
+      document.querySelectorAll('.ai-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      enrichAnswers = {};
+      renderEnrichment();
+    });
+  });
+  document.getElementById('ai-prompt').addEventListener('input', () => {
+    document.querySelectorAll('.ai-chip').forEach(c => c.classList.remove('active'));
+    enrichAnswers = {};
+    renderEnrichment();
+  });
+
+  // analyze
+  document.getElementById('ai-analyze').addEventListener('click', runAI);
+}
+
+function renderEnrichment(){
+  const text = document.getElementById('ai-prompt').value.trim();
+  const area = document.getElementById('ai-enrich-area');
+  if(!text){ area.innerHTML=''; return; }
+
+  const needed = ENRICHMENT_CHECKS.filter(c => c.detect(text));
+  if(needed.length === 0){ area.innerHTML=''; return; }
+
+  let html = '<div class="ai-enrich"><div class="ai-enrich-title">💡 Help Bob estimate better — answer any that apply:</div>';
+  needed.forEach(check => {
+    html += `<div><div class="ai-enrich-q">${check.q}</div><div class="ai-enrich-opts">`;
+    check.opts.forEach(opt => {
+      const sel = (enrichAnswers[check.key]||'') === opt;
+      html += `<button class="ai-enrich-opt${sel?' sel':''}" data-key="${check.key}" data-val="${opt}" type="button">${opt}</button>`;
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  area.innerHTML = html;
+
+  area.querySelectorAll('.ai-enrich-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const {key,val} = btn.dataset;
+      enrichAnswers[key] = enrichAnswers[key]===val ? null : val;
+      renderEnrichment();
+    });
+  });
+}
+
+function buildEnrichedPrompt(){
+  let prompt = document.getElementById('ai-prompt').value.trim();
+  const extras = [];
+  if(enrichAnswers.roles)  extras.push(`Roles involved: ${enrichAnswers.roles}`);
+  if(enrichAnswers.scale)  extras.push(`Team size: ${enrichAnswers.scale}`);
+  if(enrichAnswers.freq)   extras.push(`Frequency: ${enrichAnswers.freq}`);
+  if(enrichAnswers.domain) extras.push(`ELM tools: ${enrichAnswers.domain}`);
+  if(extras.length) prompt += '\n\nAdditional context:\n' + extras.map(e=>'- '+e).join('\n');
+  return prompt;
+}
+
+async function runAI(){
+  if(aiRunning) return;
+  const endpoint = document.getElementById('ai-endpoint').value.trim();
+  const key      = document.getElementById('ai-key').value.trim();
+  const prompt   = buildEnrichedPrompt();
+
+  if(!endpoint){ showAIResult('error','Please enter the Inference API URL.'); return; }
+  if(!key){ showAIResult('error','Please enter your Bob Inference API key.'); return; }
+  if(!prompt){ showAIResult('error','Please describe your workflow first.'); return; }
+
+  aiRunning = true;
+  const btn = document.getElementById('ai-analyze');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span><span>Analyzing…</span>';
+  document.getElementById('ai-result').innerHTML = '';
+
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(()=>ctrl.abort(), 30000);
+
+    const resp = await fetch(endpoint, {
+      method:'POST',
+      headers:{ 'Authorization':`Bearer ${key}`, 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5',
+        messages:[
+          { role:'system', content: SYSTEM_PROMPT },
+          { role:'user',   content: prompt }
+        ]
+      }),
+      signal: ctrl.signal
+    }).finally(()=>clearTimeout(timer));
+
+    if(resp.status===401||resp.status===403){
+      showAIResult('error','Invalid API key. Generate an Inference-scoped key at <a href="https://bob.ibm.com" target="_blank">bob.ibm.com ↗</a>'); return;
+    }
+    if(resp.status===429){ showAIResult('error','Rate limit hit — wait a moment and retry.'); return; }
+    if(!resp.ok){ showAIResult('error',`API error HTTP ${resp.status}. Check the endpoint URL.`); return; }
+
+    const data = await resp.json().catch(()=>null);
+    if(!data){ showAIResult('error','Empty response from API.'); return; }
+
+    const content = data?.choices?.[0]?.message?.content
+                 ?? data?.content?.[0]?.text
+                 ?? data?.message
+                 ?? (typeof data==='string'?data:null);
+
+    if(!content){ showAIResult('error','Unexpected response format.',JSON.stringify(data,null,2)); return; }
+
+    const cleaned = content.replace(/^```(?:json)?\s*/i,'').replace(/```\s*$/,'').trim();
+    let parsed;
+    try{ parsed = JSON.parse(cleaned); }
+    catch(_){ showAIResult('error','Could not parse JSON from response.',content); return; }
+
+    const result = {};
+    for(const [k,v] of Object.entries(parsed)){
+      if(VALID_FNS.has(k) && Number.isInteger(v) && v>0) result[k]=v;
+    }
+    if(Object.keys(result).length===0){ showAIResult('warn','No ELM functions detected — try rephrasing or adding more detail.'); return; }
+
+    lastAIResult = result;
+    showAITable(result);
+
+  } catch(err){
+    if(err.name==='AbortError'){
+      showAIResult('error','Request timed out after 30s.');
+    } else {
+      const isFile = location.protocol === 'file:';
+      const hint = isFile
+        ? ' <strong>You are opening this file directly (file://). Serve it over HTTP instead — see instructions below.</strong>'
+        : ' Check the endpoint URL and that your API key is valid.';
+      showAIResult('error', `Network error: ${err.message}.${hint}`, `Protocol: ${location.protocol}\nEndpoint: ${endpoint}\nError: ${err.name} — ${err.message}`);
+    }
+  } finally {
+    aiRunning = false;
+    btn.disabled = false;
+    btn.innerHTML = '<span id="ai-btn-label">Analyze Workflow</span>';
+  }
+}
+
+function showAIResult(type, msg, raw){
+  const el = document.getElementById('ai-result');
+  const icon = type==='warn'?'⚠':'✗';
+  let html = `<div class="ai-banner ${type}"><span>${icon}</span><div>${msg}</div></div>`;
+  if(raw){
+    const id='raw-'+Date.now();
+    html+=`<button class="raw-toggle" onclick="document.getElementById('${id}').style.display=document.getElementById('${id}').style.display==='none'?'':'none'" type="button">Show raw response</button>
+    <pre class="raw-pre" id="${id}" style="display:none">${escHtml(raw)}</pre>`;
+  }
+  el.innerHTML=html;
+}
+
+function showAITable(result){
+  const el = document.getElementById('ai-result');
+  let totalWU=0, rows='';
+  Object.entries(result).forEach(([fn,calls])=>{
+    const wu=WU[fn]||0;
+    const rowWU=calls*wu;
+    totalWU+=rowWU;
+    rows+=`<tr><td class="ai-fn-name">${fn}</td><td style="text-align:right">${calls}</td><td style="text-align:right">${wu}</td><td>${rowWU}</td></tr>`;
+  });
+
+  const roleOpts = ROLES.map(r=>`<option value="${r.id}">${r.icon} ${r.label}</option>`).join('');
+
+  el.innerHTML=`
+    <table class="ai-result-table">
+      <thead><tr><th>Function</th><th style="text-align:right">Calls/day</th><th style="text-align:right">WU/call</th><th>Row WU</th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr><td colspan="3" style="font-weight:700">Total WU/day</td><td style="font-weight:700">${totalWU}</td></tr></tfoot>
+    </table>
+    <div class="ai-banner success" style="margin-bottom:.75rem">✓ ${Object.keys(result).length} functions estimated · ${totalWU} WU/day</div>
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.625rem;flex-wrap:wrap">
+      <span style="font-size:.75rem;color:var(--muted)">Apply to role:</span>
+      <select class="role-select" id="ai-role-target">${roleOpts}</select>
+    </div>
+    <div class="ai-action-row">
+      <button class="btn-apply" id="ai-apply-btn" type="button">Apply to Calculator</button>
+      <button class="btn-ghost" id="ai-clear-btn" type="button">Clear</button>
+    </div>
+    <div id="ai-applied-note" style="font-size:.75rem;color:var(--green);margin-top:.375rem;display:none">✓ Applied to calculator</div>`;
+
+  document.getElementById('ai-apply-btn').addEventListener('click',()=>{
+    const roleId = document.getElementById('ai-role-target').value;
+    Object.entries(lastAIResult).forEach(([fn,calls])=>{
+      const inp = document.getElementById(`inp-${roleId}-${fn}`);
+      if(inp){
+        inp.value=calls;
+        state.calls[roleId][fn]=calls;
+        const rwu=document.getElementById(`rwu-${roleId}-${fn}`);
+        if(rwu) rwu.textContent=fmt(calls*WU[fn]);
+      }
+    });
+    calculate();
+    const note=document.getElementById('ai-applied-note');
+    if(note){ note.style.display=''; setTimeout(()=>note.style.display='none',3000); }
+  });
+
+  document.getElementById('ai-clear-btn').addEventListener('click',()=>{
+    lastAIResult=null;
+    document.getElementById('ai-result').innerHTML='';
+  });
+}
+
+// also expose globally for programmatic use
+window.applyAIResults = function(resultMap, roleId){
+  if(!resultMap||typeof resultMap!=='object') return;
+  const rid = roleId || 'developer';
+  Object.entries(resultMap).forEach(([fn,calls])=>{
+    if(!VALID_FNS.has(fn)) return;
+    const inp=document.getElementById(`inp-${rid}-${fn}`);
+    if(inp){ inp.value=calls; state.calls[rid][fn]=calls;
+      const rwu=document.getElementById(`rwu-${rid}-${fn}`);
+      if(rwu) rwu.textContent=fmt(calls*WU[fn]); }
+  });
+  calculate();
+};
+window.recalculator = calculate;
+
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+buildRoleCards();
+bindEvents();
+setupAIPanel();
+calculate();
+
+// prompt textarea triggers enrichment questions live
+document.getElementById('ai-prompt').addEventListener('input', renderEnrichment);
+</script>
+</body>
+</html>
