@@ -34,8 +34,8 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 .mode-desc{font-size:.8125rem;color:#8d8d8d;margin-bottom:1.25rem;line-height:1.6}
 
 /* CHAT WINDOW */
-.chat-window{background:#111;border:1px solid #333;border-radius:4px;min-height:120px;max-height:320px;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.75rem;margin-bottom:1rem}
-.chat-window:empty::before{content:'Describe your team or workflow above and hit Analyze.';color:#525252;font-size:.8125rem}
+.chat-window{background:#111;border:1px solid #333;border-radius:4px;max-height:320px;overflow-y:auto;padding:0;display:none;flex-direction:column;gap:.75rem;margin-bottom:1rem}
+.chat-window.has-messages{display:flex;padding:1rem}
 .chat-bubble{max-width:85%;padding:.625rem .875rem;border-radius:4px;font-size:.8125rem;line-height:1.6;white-space:pre-wrap;word-break:break-word}
 .chat-bubble.user{background:var(--chat-user);color:#fff;align-self:flex-end;border-bottom-right-radius:0}
 .chat-bubble.ai{background:var(--chat-ai);color:#f4f4f4;align-self:flex-start;border-bottom-left-radius:0}
@@ -44,7 +44,7 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 
 /* INPUT ROW */
 .chat-input-row{display:flex;gap:.5rem;align-items:flex-end}
-.chat-textarea{flex:1;padding:.625rem .75rem;background:#262626;border:1px solid #525252;border-radius:2px;color:#f4f4f4;font-family:inherit;font-size:.8125rem;resize:none;outline:none;line-height:1.5;min-height:44px;max-height:120px;transition:border-color .15s}
+.chat-textarea{flex:1;padding:.625rem .75rem;background:#262626;border:1px solid #525252;border-radius:2px;color:#f4f4f4;font-family:inherit;font-size:.8125rem;resize:vertical;outline:none;line-height:1.5;min-height:80px;max-height:200px;transition:border-color .15s}
 .chat-textarea:focus{border-color:var(--blue)}
 .chat-textarea::placeholder{color:#6f6f6f}
 .btn-analyze{height:44px;padding:0 1.25rem;background:var(--blue);color:#fff;border:none;border-radius:2px;font-size:.875rem;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s;display:flex;align-items:center;gap:.5rem;flex-shrink:0}
@@ -203,7 +203,7 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 <!-- HEADER -->
 <header class="app-header">
   <h1>IBM ELM MCP Work Unit Calculator</h1>
-  <div class="wu-pill"><strong>Work Units (WU)</strong> — each MCP tool call costs WU · 10,000 WU per user refreshes every 24 hrs</div>
+  <div class="wu-pill"><strong>Work Units (WU)</strong> — each MCP tool call costs WU</div>
 </header>
 
 <!-- HERO: AI ESTIMATOR -->
@@ -230,19 +230,27 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
     <div class="mode-tabs">
       <button class="mode-tab active" data-mode="org">🏢 Org Estimator</button>
       <button class="mode-tab" data-mode="usecase">🔍 Use Case Estimator</button>
+      <button class="mode-tab" data-mode="manual">✏️ Manual</button>
     </div>
     <p class="mode-desc" id="mode-desc">Describe your team — roles and headcount. Bob will estimate daily WU consumption per role and populate the calculator.</p>
 
-    <!-- Example chips -->
+    <!-- Example chips (AI modes only) -->
     <div class="chip-row" id="chip-row"></div>
 
-    <!-- Chat window -->
+    <!-- Chat window (AI modes only) -->
     <div class="chat-window" id="chat-window"></div>
 
-    <!-- Input -->
-    <div class="chat-input-row">
+    <!-- AI Input (AI modes only) -->
+    <div class="chat-input-row" id="ai-input-row">
       <textarea class="chat-textarea" id="chat-input" rows="2" placeholder="e.g. We have 10 developers, 5 req analysts and 3 test engineers using ELM daily…"></textarea>
       <button class="btn-analyze" id="btn-analyze"><span id="btn-label">Analyze</span></button>
+    </div>
+
+    <!-- Manual mode notice -->
+    <div class="manual-section" id="manual-section">
+      <div style="background:#262626;border:1px solid #525252;border-radius:2px;padding:.875rem 1rem;color:#c6c6c6;font-size:.8125rem;line-height:1.6">
+        ✏️ <strong style="color:#fff">Manual mode</strong> — scroll down to enter user counts and call volumes directly per role. The summary updates in real time.
+      </div>
     </div>
 
   </div>
@@ -261,9 +269,9 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
   <!-- Summary -->
   <div class="summary-card" id="summary-card">
     <div class="summary-card-hdr">
-      <span>Daily Work Unit Summary</span>
-      <span style="font-weight:400;font-size:.625rem;opacity:.8">Per user: 10,000 WU / 24 hrs</span>
-    </div>
+        <span>Daily Work Unit Summary</span>
+        <span style="font-weight:400;font-size:.625rem;opacity:.8">Org quota: 10,000 WU total · resets every 24 hrs</span>
+      </div>
     <div class="summary-grid">
       <div class="summary-metric highlight">
         <div class="summary-metric-label">Total WU / day</div>
@@ -671,7 +679,9 @@ function bindEvents(){
     state.buffer = 10;
     document.querySelectorAll('.buffer-chip').forEach(c => c.classList.toggle('active', parseInt(c.dataset.buf,10)===10));
     calculate();
-    document.getElementById('chat-window').innerHTML='';
+    const win = document.getElementById('chat-window');
+    win.innerHTML='';
+    win.classList.remove('has-messages');
   });
 
   // eye toggle
@@ -689,7 +699,8 @@ function bindEvents(){
 // ── AI ────────────────────────────────────────────────
 const MODE_DESC = {
   org:     'Describe your team — roles and headcount. Bob will estimate daily WU consumption per role and populate the calculator.',
-  usecase: 'Describe a specific workflow or use case. Bob will identify which MCP functions fire, how often, and what they cost.'
+  usecase: 'Describe a specific workflow or use case. Bob will identify which MCP functions fire, how often, and what they cost.',
+  manual:  'Enter user counts and call volumes directly. Use the role breakdown below to build your estimate by hand.'
 };
 
 const ORG_CHIPS = [
@@ -764,6 +775,7 @@ IMPORTANT: calls are TOTAL per day (not per user). Omit zero-call functions.`;
 
 function addBubble(text, type){
   const win = document.getElementById('chat-window');
+  win.classList.add('has-messages');
   const div = document.createElement('div');
   div.className = `chat-bubble ${type}`;
   div.innerHTML = text;
@@ -777,7 +789,9 @@ async function runAI(){
   const endpoint = document.getElementById('ai-endpoint').value.trim();
   const key = document.getElementById('ai-key').value.trim();
   const prompt = document.getElementById('chat-input').value.trim();
-  if(!endpoint||!key||!prompt) return;
+  if(!prompt){ addBubble('Please describe your team or workflow first.','ai'); return; }
+  if(!key){ addBubble('Please enter your Bob API key above.','ai'); return; }
+  if(!endpoint){ addBubble('Please enter the API endpoint URL above.','ai'); return; }
 
   aiRunning = true;
   const btn = document.getElementById('btn-analyze');
@@ -809,7 +823,7 @@ async function runAI(){
 
     thinking.remove();
 
-    if(resp.status===401||resp.status===403){ addBubble('Invalid API key — check your Bob credentials.','ai'); return; }
+    if(resp.status===401||resp.status===403){ addBubble('❌ Invalid API key — generate an Inference-scoped key at <a href="https://bob.ibm.com" target="_blank" style="color:#78a9ff">bob.ibm.com ↗</a>','ai'); return; }
     if(resp.status===429){ addBubble('Rate limit hit — wait a moment and retry.','ai'); return; }
     if(!resp.ok){ addBubble(`API error HTTP ${resp.status}.`,'ai'); return; }
 
@@ -895,9 +909,24 @@ function setupModes(){
       currentMode = tab.dataset.mode;
       document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t===tab));
       document.getElementById('mode-desc').textContent = MODE_DESC[currentMode];
-      document.getElementById('chat-input').placeholder = currentMode==='org'
-        ? 'e.g. We have 10 developers, 5 req analysts and 3 test engineers using ELM daily…'
-        : 'e.g. We run nightly traceability audits across 200 requirements…';
+      const isAI = currentMode !== 'manual';
+      document.getElementById('chip-row').style.display = isAI ? '' : 'none';
+      document.getElementById('chat-window').style.display = isAI ? '' : 'none';
+      document.getElementById('ai-input-row').style.display = isAI ? '' : 'none';
+      document.getElementById('manual-section').classList.toggle('active', !isAI);
+      if(!isAI){
+        document.getElementById('results-section').style.display='';
+        const db = document.getElementById('detail-body');
+        const dc = document.getElementById('detail-chevron');
+        db.classList.add('open');
+        dc.classList.add('open');
+        calculate();
+      }
+      if(isAI){
+        document.getElementById('chat-input').placeholder = currentMode==='org'
+          ? 'e.g. We have 10 developers, 5 req analysts and 3 test engineers using ELM daily…'
+          : 'e.g. We run nightly traceability audits across 200 requirements…';
+      }
       renderChips();
     });
   });
@@ -905,6 +934,7 @@ function setupModes(){
 
 function renderChips(){
   const row = document.getElementById('chip-row');
+  if(currentMode==='manual'){ row.innerHTML=''; return; }
   const chips = currentMode==='org' ? ORG_CHIPS : UC_CHIPS;
   const prompts = currentMode==='org' ? ORG_PROMPTS : UC_PROMPTS;
   row.innerHTML = chips.map(c=>`<button class="chip" data-key="${c.key}" data-mode="${currentMode}">${c.label}</button>`).join('');
