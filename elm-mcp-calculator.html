@@ -24,7 +24,7 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 .wu-pill{background:#262626;border:1px solid #525252;border-radius:2px;padding:.3rem .75rem;font-size:.6875rem;color:#c6c6c6;line-height:1.6}
 .wu-pill strong{color:#fff}
 
-/* HERO AI SECTION */
+/* HERO */
 .hero{background:var(--chat-bg);padding:2rem;border-bottom:1px solid #333}
 .hero-inner{max-width:860px;margin:0 auto}
 .mode-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
@@ -33,7 +33,7 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 .mode-tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
 .mode-desc{font-size:.8125rem;color:#8d8d8d;margin-bottom:1.25rem;line-height:1.6}
 
-/* CHAT WINDOW */
+/* CHAT */
 .chat-window{background:#111;border:1px solid #333;border-radius:4px;max-height:320px;overflow-y:auto;padding:0;display:none;flex-direction:column;gap:.75rem;margin-bottom:1rem}
 .chat-window.has-messages{display:flex;padding:1rem}
 .chat-window.hidden-mode{display:none!important}
@@ -71,7 +71,11 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 .cred-hint{font-size:.625rem;color:#78a9ff;margin-top:.2rem}
 .cred-hint a{color:inherit}
 
-/* RESULTS SECTION */
+/* MANUAL NOTICE */
+.manual-section{display:none;margin-top:.75rem}
+.manual-section.active{display:block}
+
+/* RESULTS */
 .results-section{max-width:1100px;margin:0 auto;padding:1.5rem 2rem 3rem}
 @media(max-width:700px){.results-section{padding:1rem 1rem 3rem}}
 
@@ -88,7 +92,7 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 .summary-metric.buffered .summary-metric-val{color:var(--purple)}
 @media(max-width:500px){.summary-grid{grid-template-columns:1fr 1fr}}
 
-/* BUFFER CONTROL */
+/* BUFFER */
 .buffer-row{padding:.875rem 1.25rem;background:#fafafa;border-top:1px solid var(--border);display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
 .buffer-label{font-size:.75rem;color:var(--muted);white-space:nowrap}
 .buffer-chips{display:flex;gap:.375rem;flex-wrap:wrap}
@@ -109,7 +113,6 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 .drivers-table tr:hover td{background:#f9f9f9}
 .fn-label{font-size:.8125rem;color:var(--text)}
 .fn-tool{font-family:'IBM Plex Mono','Courier New',monospace;font-size:.6875rem;color:var(--helper);margin-top:.1rem}
-.fn-group{font-size:.625rem;font-weight:600;padding:.1rem .4rem;border-radius:10px;white-space:nowrap}
 .fg-general{background:#e0e0e0;color:#525252}
 .fg-req{background:#fff0f7;color:#9f1853}
 .fg-ewm{background:#edf5ff;color:#0043ce}
@@ -120,42 +123,22 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 .wu-bar-fill{height:100%;border-radius:3px;background:var(--blue);transition:width .4s}
 .wu-val{font-family:'IBM Plex Mono','Courier New',monospace;font-size:.75rem;text-align:right;white-space:nowrap}
 
-/* DETAIL SECTION */
-.detail-toggle-btn{width:100%;padding:.75rem 1.25rem;background:var(--layer);border:1px solid var(--border);border-radius:2px;text-align:left;cursor:pointer;font-family:inherit;font-size:.8125rem;font-weight:600;color:var(--text);display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;transition:background .15s}
-.detail-toggle-btn:hover{background:#f4f4f4}
-.detail-chevron{font-size:.75rem;color:var(--helper);transition:transform .2s}
-.detail-chevron.open{transform:rotate(180deg)}
-.detail-body{display:none}
-.detail-body.open{display:block}
-
-/* MANUAL MODE */
-.manual-section{display:none;margin-top:.75rem}
-.manual-section.active{display:block}
-
-/* ROLE CARDS */
-.role-card{background:var(--layer);border:1px solid var(--border);margin-bottom:.75rem;border-radius:2px;overflow:hidden}
-.role-card-hdr{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.25rem;background:#f4f4f4;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:background .15s}
-.role-card-hdr:hover{background:#e8e8e8}
-.role-icon{width:28px;height:28px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.875rem;flex-shrink:0}
-.role-title{font-size:.875rem;font-weight:600}
-.role-subtitle{font-size:.625rem;color:var(--helper)}
-.role-wu-summary{margin-left:auto;text-align:right;padding-right:.5rem}
-.role-wu-val{font-size:.875rem;font-weight:700;font-family:'IBM Plex Mono','Courier New',monospace;color:var(--blue)}
-.role-wu-lbl{font-size:.625rem;color:var(--helper)}
-.role-collapse-btn{background:none;border:none;cursor:pointer;color:var(--helper);font-size:.75rem;padding:.25rem;transition:transform .2s;flex-shrink:0}
-.role-collapse-btn.open{transform:rotate(180deg)}
-.role-users-control{display:flex;align-items:center;gap:.375rem;margin-left:auto}
-.role-users-label{font-size:.625rem;color:var(--helper);white-space:nowrap}
+/* FLAT FUNCTION TABLE */
+.breakdown-card{background:var(--layer);border:1px solid var(--border);border-radius:2px;margin-bottom:1.5rem;overflow:hidden}
+.breakdown-hdr{padding:.75rem 1.25rem;background:#f4f4f4;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.breakdown-hdr-left{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+.breakdown-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.users-control{display:flex;align-items:center;gap:.5rem}
+.users-label{font-size:.75rem;color:var(--muted);white-space:nowrap}
+.preset-select{padding:.25rem .5rem;border:1px solid var(--border-strong);border-radius:2px;font-size:.75rem;font-family:inherit;color:var(--text);background:#fff;cursor:pointer;outline:none}
+.preset-select:focus{border-color:var(--blue)}
 .stepper{display:flex;align-items:center;border:1px solid var(--border-strong);border-radius:2px;overflow:hidden}
-.stepper input[type=number]{width:46px;border:none;outline:none;text-align:center;font-size:.8125rem;padding:.2rem;background:#fff;color:var(--text);-moz-appearance:textfield;font-family:inherit}
+.stepper input[type=number]{width:52px;border:none;outline:none;text-align:center;font-size:.8125rem;padding:.2rem;background:#fff;color:var(--text);-moz-appearance:textfield;font-family:inherit}
 .stepper input[type=number]::-webkit-outer-spin-button,.stepper input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
-.stepper button{width:24px;border:none;background:#f4f4f4;color:var(--text);cursor:pointer;font-size:1rem;padding:.15rem 0;transition:background .1s;font-family:inherit;line-height:1}
+.stepper button{width:26px;border:none;background:#f4f4f4;color:var(--text);cursor:pointer;font-size:1rem;padding:.15rem 0;transition:background .1s;font-family:inherit;line-height:1}
 .stepper button:hover{background:#e0e0e0}
-.stepper button:disabled{opacity:.35;cursor:not-allowed}
-
-/* FUNCTION TABLE */
 .fn-table-wrap{overflow-x:auto}
-.fn-table{width:100%;border-collapse:collapse;min-width:480px}
+.fn-table{width:100%;border-collapse:collapse;min-width:520px}
 .fn-table th{font-size:.625rem;font-weight:600;color:var(--helper);text-transform:uppercase;letter-spacing:.03em;padding:.4rem 1.25rem;background:#fafafa;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
 .fn-table th:not(:first-child){text-align:right}
 .fn-table td{padding:.4rem 1.25rem;border-bottom:1px solid var(--border);font-size:.8125rem;vertical-align:middle}
@@ -170,14 +153,7 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 .row-wu{font-family:'IBM Plex Mono','Courier New',monospace;font-size:.75rem;color:var(--helper)}
 .group-sep td{background:#f4f4f4;font-size:.625rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--helper);padding:.3rem 1.25rem;border-bottom:1px solid var(--border)}
 
-/* BANNER */
-.banner{display:flex;align-items:flex-start;gap:.5rem;padding:.625rem .875rem;border-radius:2px;font-size:.75rem;line-height:1.6;margin-bottom:.75rem}
-.banner.info{background:var(--blue-light);border:1px solid #a6c8ff;border-left:3px solid var(--blue);color:#0043ce}
-.banner.warn{background:var(--amber-bg);border:1px solid #f1c21b;border-left:3px solid #f1c21b;color:#3d2f00}
-.banner.error{background:var(--red-bg);border:1px solid #fa4d56;border-left:3px solid var(--red);color:#750e13}
-.banner.success{background:var(--green-bg);border:1px solid #42be65;border-left:3px solid var(--green);color:#044317}
-
-/* RESET BUTTON */
+/* RESET */
 .btn-reset{border:1px solid #da1e28;background:transparent;color:var(--red);padding:.3rem .875rem;font-size:.8125rem;cursor:pointer;border-radius:2px;font-family:inherit;transition:background .15s}
 .btn-reset:hover{background:var(--red-bg)}
 
@@ -185,11 +161,9 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 
-/* EMPTY STATE */
-.empty-state{text-align:center;padding:3rem 1rem;color:var(--helper)}
-.empty-state-icon{font-size:2rem;margin-bottom:.75rem}
-.empty-state-title{font-size:1rem;font-weight:600;color:var(--muted);margin-bottom:.5rem}
-.empty-state-desc{font-size:.8125rem;max-width:400px;margin:0 auto}
+/* BANNER */
+.banner{display:flex;align-items:flex-start;gap:.5rem;padding:.625rem .875rem;border-radius:2px;font-size:.75rem;line-height:1.6;margin-bottom:.75rem}
+.banner.info{background:var(--blue-light);border:1px solid #a6c8ff;border-left:3px solid var(--blue);color:#0043ce}
 
 @media(max-width:700px){
   .app-header{padding:.875rem 1rem}
@@ -198,7 +172,7 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
   .summary-metric-val{font-size:1.125rem}
   .drivers-table th,.drivers-table td{padding:.4rem .75rem}
   .fn-table th,.fn-table td{padding:.4rem .75rem}
-  .role-card-hdr{padding:.625rem .75rem}
+  .breakdown-hdr{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
@@ -210,7 +184,7 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
   <div class="wu-pill"><strong>Work Units (WU)</strong> — each MCP tool call costs WU</div>
 </header>
 
-<!-- HERO: AI ESTIMATOR -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
 
@@ -236,24 +210,24 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
       <button class="mode-tab" data-mode="usecase">🔍 Use Case Estimator</button>
       <button class="mode-tab" data-mode="manual">✏️ Manual</button>
     </div>
-    <p class="mode-desc" id="mode-desc">Describe your team — roles and headcount. Bob will estimate daily WU consumption per role and populate the calculator.</p>
+    <p class="mode-desc" id="mode-desc">Describe your team — size and what they do in ELM. Bob will estimate daily WU consumption and populate the calculator.</p>
 
-    <!-- Example chips (AI modes only) -->
+    <!-- Example chips -->
     <div class="chip-row" id="chip-row"></div>
 
-    <!-- Chat window (AI modes only) -->
+    <!-- Chat window -->
     <div class="chat-window" id="chat-window"></div>
 
-    <!-- AI Input (AI modes only) -->
+    <!-- AI input -->
     <div class="chat-input-row" id="ai-input-row">
       <textarea class="chat-textarea" id="chat-input" rows="2" placeholder="e.g. We have 10 developers, 5 req analysts and 3 test engineers using ELM daily…"></textarea>
       <button class="btn-analyze" id="btn-analyze"><span id="btn-label">Analyze</span></button>
     </div>
 
-    <!-- Manual mode notice -->
+    <!-- Manual notice -->
     <div class="manual-section" id="manual-section">
       <div style="background:#262626;border:1px solid #525252;border-radius:2px;padding:.875rem 1rem;color:#c6c6c6;font-size:.8125rem;line-height:1.6">
-        ✏️ <strong style="color:#fff">Manual mode</strong> — scroll down to enter user counts and call volumes directly per role. The summary updates in real time.
+        ✏️ <strong style="color:#fff">Manual mode</strong> — set your user count, load defaults for a role type, then adjust call volumes. The summary updates in real time.
       </div>
     </div>
 
@@ -263,39 +237,32 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 <!-- RESULTS -->
 <div class="results-section" id="results-section">
 
-  <!-- Empty state shown until AI runs -->
-  <div id="empty-state" class="empty-state" style="display:none">
-    <div class="empty-state-icon">🔍</div>
-    <div class="empty-state-title">No estimates yet</div>
-    <div class="empty-state-desc">Describe your team or workflow above and hit Analyze. Bob will calculate your daily WU consumption.</div>
-  </div>
-
   <!-- Summary -->
-  <div class="summary-card" id="summary-card">
+  <div class="summary-card">
     <div class="summary-card-hdr">
-        <span>Daily Work Unit Summary</span>
-        <span style="font-weight:400;font-size:.625rem;opacity:.8">Org quota: 10,000 WU total · resets every 24 hrs</span>
-      </div>
+      <span>Daily Work Unit Summary</span>
+      <span style="font-weight:400;font-size:.625rem;opacity:.8">Org quota: 10,000 WU total · resets every 24 hrs</span>
+    </div>
     <div class="summary-grid">
       <div class="summary-metric highlight">
         <div class="summary-metric-label">Total WU / day</div>
-        <div class="summary-metric-val" id="m-total-wu">—</div>
-        <div class="summary-metric-sub" id="m-total-users">—</div>
+        <div class="summary-metric-val" id="m-total-wu">0</div>
+        <div class="summary-metric-sub" id="m-total-users">0 users</div>
       </div>
       <div class="summary-metric highlight">
-        <div class="summary-metric-label">Tokens / day</div>
-        <div class="summary-metric-val" id="m-tokens">—</div>
-        <div class="summary-metric-sub">1 token = 400 WU</div>
+        <div class="summary-metric-label">WU / user / day</div>
+        <div class="summary-metric-val" id="m-wu-per-user">0</div>
+        <div class="summary-metric-sub">avg across all functions</div>
       </div>
       <div class="summary-metric buffered">
         <div class="summary-metric-label">WU / day + buffer</div>
-        <div class="summary-metric-val" id="m-buffered-wu">—</div>
-        <div class="summary-metric-sub" id="m-buffer-pct-lbl">20% headroom</div>
+        <div class="summary-metric-val" id="m-buffered-wu">0</div>
+        <div class="summary-metric-sub" id="m-buffer-pct-lbl">+10% headroom</div>
       </div>
       <div class="summary-metric buffered">
         <div class="summary-metric-label">Tokens / day + buffer</div>
-        <div class="summary-metric-val" id="m-buffered-tokens">—</div>
-        <div class="summary-metric-sub">Recommended planning figure</div>
+        <div class="summary-metric-val" id="m-buffered-tokens">0</div>
+        <div class="summary-metric-sub">1 token = 400 WU · recommended figure</div>
       </div>
     </div>
     <div class="buffer-row">
@@ -317,20 +284,48 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
     <div class="fn-table-wrap">
       <table class="drivers-table">
         <thead><tr>
-          <th>Function</th><th>Group</th><th>Calls/day</th><th>WU/call</th><th style="min-width:140px">WU total</th>
+          <th>Function</th><th>Group</th><th>Calls/user/day</th><th>WU/call</th><th style="min-width:140px">WU total</th>
         </tr></thead>
         <tbody id="drivers-tbody"></tbody>
       </table>
     </div>
   </div>
 
-  <!-- Role breakdown (always visible) -->
-  <div id="detail-body" class="detail-body open">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-      <span style="font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Per-Role Breakdown</span>
+  <!-- Flat function table -->
+  <div class="breakdown-card">
+    <div class="breakdown-hdr">
+      <div class="breakdown-hdr-left">
+        <span class="breakdown-title">Function Call Volumes</span>
+        <div class="users-control">
+          <span class="users-label">Users:</span>
+          <div class="stepper">
+            <button type="button" id="users-dec">−</button>
+            <input type="number" id="inp-users" value="0" min="0" step="1"/>
+            <button type="button" id="users-inc">+</button>
+          </div>
+        </div>
+        <div class="users-control">
+          <span class="users-label">Load defaults:</span>
+          <select class="preset-select" id="preset-select">
+            <option value="">— choose role —</option>
+            <option value="developer">Developer</option>
+            <option value="analyst">Req. Analyst</option>
+            <option value="tester">Test Engineer</option>
+            <option value="architect">Sys. Architect</option>
+            <option value="manager">Eng. Manager</option>
+          </select>
+        </div>
+      </div>
       <button class="btn-reset" id="btn-reset">✕ Reset All</button>
     </div>
-    <div id="role-cards-wrap"></div>
+    <div class="fn-table-wrap">
+      <table class="fn-table">
+        <thead><tr>
+          <th>Function</th><th>WU/call</th><th>Calls/user/day</th><th>Total WU/day</th>
+        </tr></thead>
+        <tbody id="fn-tbody"></tbody>
+      </table>
+    </div>
   </div>
 
 </div><!-- /results-section -->
@@ -338,20 +333,15 @@ body{font-family:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;background:var(
 <script>
 // ── DATA ──────────────────────────────────────────────
 const WU_COST = {
-  // General
   list_project_areas:0, get_user:0, get_project_area:0,
-  // Requirements (DOORS Next)
   get_requirement:5, search_requirement:10, list_linked_requirements:8,
   get_project_components:5, get_project_component_folders:5,
   get_project_component_configuration:8, get_project_component_types:8,
-  // EWM / CCM
   get_workitem:5, search_workitems:10, get_workitem_schema:8,
   list_workitem_releases:8, list_workitem_categories:8,
   list_linked_workitems:8, get_scm_artifact:5,
-  // ETM / QM
   get_testartifact:5, search_testartifact:10, get_testartifact_schema:8,
   list_linked_testartifacts:8,
-  // SysML
   list_modeling_projects:8
 };
 
@@ -369,126 +359,136 @@ const FN_GROUP = {
 };
 
 const GROUP_META = {
-  general:{label:'General',cls:'fg-general'},
-  req:    {label:'Requirements',cls:'fg-req'},
-  ewm:    {label:'EWM / CCM',cls:'fg-ewm'},
-  etm:    {label:'ETM / QM',cls:'fg-etm'},
-  sysml:  {label:'SysML',cls:'fg-sysml'}
+  general:{label:'General',       cls:'fg-general'},
+  req:    {label:'Requirements',  cls:'fg-req'},
+  ewm:    {label:'EWM / CCM',     cls:'fg-ewm'},
+  etm:    {label:'ETM / QM',      cls:'fg-etm'},
+  sysml:  {label:'SysML',         cls:'fg-sysml'}
 };
 
 const FN_DESC = {
-  list_project_areas:'List all ELM project areas', get_user:'Resolve user by name or ID',
-  get_project_area:'Fetch project area details', get_requirement:'Retrieve requirement by ID',
-  search_requirement:'Full-text requirement search', list_linked_requirements:'Requirements linked to WI or test',
-  get_project_components:'Component hierarchy', get_project_component_folders:'Folder hierarchy',
-  get_project_component_configuration:'Streams and baselines', get_project_component_types:'Type system and attributes',
-  get_workitem:'Retrieve a work item', search_workitems:'Advanced work item query',
-  get_workitem_schema:'Work item type schema', list_workitem_releases:'List releases (Found In)',
-  list_workitem_categories:'List work item categories', list_linked_workitems:'Work items linked to test or req',
-  get_scm_artifact:'Changeset, workspace, or stream', get_testartifact:'Retrieve a test artifact',
-  search_testartifact:'Search test artifacts', get_testartifact_schema:'Test artifact type schema',
-  list_linked_testartifacts:'Test artifacts linked to WI or req', list_modeling_projects:'List SysML v2 projects'
+  list_project_areas:'List all ELM project areas',
+  get_user:'Resolve user by name or ID',
+  get_project_area:'Fetch project area details',
+  get_requirement:'Retrieve requirement by ID',
+  search_requirement:'Full-text requirement search',
+  list_linked_requirements:'Requirements linked to WI or test',
+  get_project_components:'Component hierarchy',
+  get_project_component_folders:'Folder hierarchy',
+  get_project_component_configuration:'Streams and baselines',
+  get_project_component_types:'Type system and attributes',
+  get_workitem:'Retrieve a work item',
+  search_workitems:'Advanced work item query',
+  get_workitem_schema:'Work item type schema',
+  list_workitem_releases:'List releases (Found In)',
+  list_workitem_categories:'List work item categories',
+  list_linked_workitems:'Work items linked to test or req',
+  get_scm_artifact:'Changeset, workspace, or stream',
+  get_testartifact:'Retrieve a test artifact',
+  search_testartifact:'Search test artifacts',
+  get_testartifact_schema:'Test artifact type schema',
+  list_linked_testartifacts:'Test artifacts linked to WI or req',
+  list_modeling_projects:'List SysML v2 projects'
 };
 
-const ROLES = [
-  {id:'developer', label:'Developer', icon:'💻', color:'#0043ce', bg:'#edf5ff', desc:'EWM · SCM · linked requirements'},
-  {id:'analyst',   label:'Req. Analyst', icon:'📋', color:'#9f1853', bg:'#fff0f7', desc:'DOORS Next · traceability'},
-  {id:'tester',    label:'Test Engineer', icon:'🧪', color:'#005a3c', bg:'#defbe6', desc:'ETM · test artifacts · coverage'},
-  {id:'architect', label:'Sys. Architect', icon:'🏗️', color:'#6929c4', bg:'#f8f0fe', desc:'SysML · components · deep links'},
-  {id:'manager',   label:'Eng. Manager', icon:'📊', color:'#525252', bg:'#e0e0e0', desc:'Governance · status · releases'}
-];
+// Default call volumes per role (calls per user per day)
+const ROLE_DEFAULTS = {
+  developer: {
+    get_workitem:10, search_workitems:5, get_scm_artifact:4,
+    list_linked_requirements:3, get_workitem_schema:2, list_linked_workitems:2
+  },
+  analyst: {
+    search_requirement:8, get_requirement:10, list_linked_requirements:5,
+    get_project_component_types:3, get_project_component_folders:3,
+    get_project_component_configuration:2
+  },
+  tester: {
+    search_testartifact:6, get_testartifact:8, list_linked_testartifacts:5,
+    list_linked_workitems:3, get_testartifact_schema:2
+  },
+  architect: {
+    get_project_component_types:5, list_modeling_projects:4,
+    search_requirement:4, get_project_component_configuration:3,
+    get_project_components:3, list_linked_requirements:3
+  },
+  manager: {
+    search_workitems:4, get_workitem:5, list_workitem_releases:2,
+    list_workitem_categories:2, get_project_area:2
+  }
+};
 
-const DAILY_QUOTA = 10000;
-const WU_PER_TOKEN = 400;
 const FNS = Object.keys(WU_COST);
 const VALID_FNS = new Set(FNS);
+const WU_PER_TOKEN = 400;
+const GROUP_ORDER = ['general','req','ewm','etm','sysml'];
 
 // ── STATE ─────────────────────────────────────────────
-const state = {
-  users:  {developer:0, analyst:0, tester:0, architect:0, manager:0},
-  calls:  {},
-  buffer: 10
-};
-ROLES.forEach(r => { state.calls[r.id] = {}; FNS.forEach(fn => { state.calls[r.id][fn] = 0; }); });
+const state = { users: 0, calls: {}, buffer: 10 };
+FNS.forEach(fn => { state.calls[fn] = 0; });
 
-// Restore from localStorage
+// Restore from localStorage (v2 schema only)
 try {
-  const saved = JSON.parse(localStorage.getItem('elm-calc-state')||'{}');
-  if(saved.users) Object.assign(state.users, saved.users);
-  if(saved.calls)  ROLES.forEach(r => { if(saved.calls[r.id]) Object.assign(state.calls[r.id], saved.calls[r.id]); });
-  if(saved.buffer !== undefined) state.buffer = saved.buffer;
+  const saved = JSON.parse(localStorage.getItem('elm-calc-state-v2') || '{}');
+  if (saved.users !== undefined) state.users = saved.users;
+  if (saved.calls) FNS.forEach(fn => { if (saved.calls[fn] !== undefined) state.calls[fn] = saved.calls[fn]; });
+  if (saved.buffer !== undefined) state.buffer = saved.buffer;
 } catch(_){}
 
-function saveState(){ try{ localStorage.setItem('elm-calc-state', JSON.stringify({users:state.users,calls:state.calls,buffer:state.buffer})); }catch(_){} }
+function saveState(){
+  try { localStorage.setItem('elm-calc-state-v2', JSON.stringify({users:state.users,calls:state.calls,buffer:state.buffer})); } catch(_){}
+}
 
 // ── CALC ──────────────────────────────────────────────
 function fmt(n){ return new Intl.NumberFormat('en-US').format(Math.round(n)); }
-
-function calculate(){
-  let totalWU=0, totalUsers=0;
-  const roleWU={};
-
-  ROLES.forEach(r => {
-    const users = state.users[r.id]||0;
-    let wu=0;
-    FNS.forEach(fn => { wu += (state.calls[r.id][fn]||0)*(WU_COST[fn]||0); });
-    roleWU[r.id] = {wu, users, total: wu*users};
-    totalWU  += wu*users;
-    totalUsers += users;
-    // update role card summary
-    const rv = document.getElementById(`rwu-${r.id}`);
-    if(rv){ rv.textContent = fmt(wu)+' WU/user'; }
-  });
-
-  const buf = state.buffer/100;
-  const bufWU = totalWU*(1+buf);
-  const tokens = totalWU/WU_PER_TOKEN;
-  const bufTokens = bufWU/WU_PER_TOKEN;
-
-  set('m-total-wu',       fmt(totalWU));
-  set('m-total-users',    `${fmt(totalUsers)} user${totalUsers!==1?'s':''}`);
-  set('m-tokens',         fmtT(tokens));
-  set('m-buffered-wu',    fmt(bufWU));
-  set('m-buffered-tokens',fmtT(bufTokens));
-  set('m-buffer-pct-lbl', state.buffer===0 ? 'No buffer applied' : `+${state.buffer}% headroom`);
-
-  updateDrivers();
-  updateRoleCardTotals();
-  saveState();
-}
-
 function fmtT(n){ return n < 1 ? n.toFixed(3) : n < 100 ? n.toFixed(2) : fmt(n); }
 function set(id,v){ const el=document.getElementById(id); if(el) el.textContent=v; }
 
+function calculate(){
+  let wuPerUser = 0;
+  FNS.forEach(fn => {
+    const c = state.calls[fn] || 0;
+    const rowWU = c * (WU_COST[fn] || 0) * state.users;
+    wuPerUser += c * (WU_COST[fn] || 0);
+    const rwu = document.getElementById(`rwu-${fn}`);
+    if (rwu) rwu.textContent = fmt(rowWU);
+  });
+
+  const totalWU = wuPerUser * state.users;
+  const buf = state.buffer / 100;
+  const bufWU = totalWU * (1 + buf);
+  const bufTokens = bufWU / WU_PER_TOKEN;
+
+  set('m-total-wu',        fmt(totalWU));
+  set('m-total-users',     `${fmt(state.users)} user${state.users !== 1 ? 's' : ''}`);
+  set('m-wu-per-user',     fmt(wuPerUser));
+  set('m-buffered-wu',     fmt(bufWU));
+  set('m-buffered-tokens', fmtT(bufTokens));
+  set('m-buffer-pct-lbl',  state.buffer === 0 ? 'No buffer applied' : `+${state.buffer}% headroom`);
+
+  updateDrivers();
+  saveState();
+}
+
 function updateDrivers(){
-  const rows=[];
-  ROLES.forEach(r => {
-    FNS.forEach(fn => {
-      const calls = state.calls[r.id][fn]||0;
-      if(calls===0) return;
-      const wu = calls*(WU_COST[fn]||0)*( state.users[r.id]||0);
-      rows.push({fn, calls: calls*(state.users[r.id]||0), wuPerCall:WU_COST[fn]||0, wu});
-    });
-  });
-  // aggregate by fn
-  const agg={};
-  rows.forEach(r => {
-    if(!agg[r.fn]) agg[r.fn]={fn:r.fn, calls:0, wuPerCall:r.wuPerCall, wu:0};
-    agg[r.fn].calls+=r.calls;
-    agg[r.fn].wu+=r.wu;
-  });
-  const sorted = Object.values(agg).sort((a,b)=>b.wu-a.wu).slice(0,10);
-  const maxWU = sorted[0]?.wu||1;
+  const rows = FNS
+    .map(fn => ({ fn, calls: state.calls[fn]||0, wuPerCall: WU_COST[fn]||0, wu: (state.calls[fn]||0)*(WU_COST[fn]||0)*state.users }))
+    .filter(r => r.wu > 0)
+    .sort((a,b) => b.wu - a.wu)
+    .slice(0, 10);
+  const maxWU = rows[0]?.wu || 1;
   const tbody = document.getElementById('drivers-tbody');
-  if(!tbody) return;
-  if(sorted.length===0){ tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;color:var(--helper);padding:1rem">No usage data yet — enter user counts in the role breakdown below</td></tr>`; return; }
-  tbody.innerHTML = sorted.map(r => {
-    const g = FN_GROUP[r.fn]||'general';
+  if (!tbody) return;
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--helper);padding:1rem">No usage yet — set user count and call volumes below</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map(r => {
+    const g = FN_GROUP[r.fn] || 'general';
     const gm = GROUP_META[g];
-    const pct = (r.wu/maxWU)*100;
+    const pct = (r.wu / maxWU) * 100;
     return `<tr>
       <td><div class="fn-label">${FN_DESC[r.fn]||r.fn}</div><div class="fn-tool">${r.fn}</div></td>
-      <td><span class="fn-group badge ${gm.cls}">${gm.label}</span></td>
+      <td><span class="badge ${gm.cls}">${gm.label}</span></td>
       <td style="text-align:right;font-family:'IBM Plex Mono','Courier New',monospace;font-size:.75rem">${fmt(r.calls)}</td>
       <td style="text-align:right"><span class="badge ${r.wuPerCall===0?'b-free':r.wuPerCall<=5?'b-5':r.wuPerCall<=8?'b-8':'b-10'}">${r.wuPerCall===0?'Free':r.wuPerCall+' WU'}</span></td>
       <td><div class="wu-bar-wrap"><div class="wu-bar-track"><div class="wu-bar-fill" style="width:${pct}%"></div></div><span class="wu-val">${fmt(r.wu)}</span></div></td>
@@ -496,212 +496,160 @@ function updateDrivers(){
   }).join('');
 }
 
-function updateRoleCardTotals(){
-  ROLES.forEach(r => {
-    let wu=0;
-    FNS.forEach(fn => { wu += (state.calls[r.id][fn]||0)*(WU_COST[fn]||0); });
-    const el = document.getElementById(`role-wu-val-${r.id}`);
-    if(el) el.textContent = fmt(wu);
-  });
-}
-
-// ── BUILD ROLE CARDS ──────────────────────────────────
-function buildRoleCards(){
-  const wrap = document.getElementById('role-cards-wrap');
-  if(!wrap) return;
-
-  const groupOrder = ['general','req','ewm','etm','sysml'];
-
-  ROLES.forEach(role => {
-    const card = document.createElement('div');
-    card.className = 'role-card';
-
-    card.innerHTML = `
-      <div class="role-card-hdr" id="rhdr-${role.id}">
-        <div class="role-icon" style="background:${role.bg};color:${role.color}">${role.icon}</div>
-        <div style="min-width:0">
-          <div class="role-title">${role.label}</div>
-          <div class="role-subtitle">${role.desc}</div>
-        </div>
-        <div class="role-users-control">
-          <span class="role-users-label">Users:</span>
+// ── BUILD FLAT TABLE ───────────────────────────────────
+function buildFnTable(){
+  const tbody = document.getElementById('fn-tbody');
+  if (!tbody) return;
+  GROUP_ORDER.forEach(grp => {
+    const fnsInGrp = FNS.filter(fn => FN_GROUP[fn] === grp);
+    if (!fnsInGrp.length) return;
+    const sep = document.createElement('tr');
+    sep.className = 'group-sep';
+    sep.innerHTML = `<td colspan="4">${GROUP_META[grp].label}</td>`;
+    tbody.appendChild(sep);
+    fnsInGrp.forEach(fn => {
+      const wu = WU_COST[fn];
+      const calls = state.calls[fn] || 0;
+      const badgeCls = wu===0?'b-free':wu<=5?'b-5':wu<=8?'b-8':'b-10';
+      const badgeLbl = wu===0?'Free':`${wu} WU`;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>
+          <div style="font-size:.8125rem;color:var(--text)">${FN_DESC[fn]||fn}</div>
+          <div style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:.6875rem;color:var(--helper)">${fn}</div>
+        </td>
+        <td><span class="badge ${badgeCls}">${badgeLbl}</span></td>
+        <td>
           <div class="stepper">
-            <button type="button" data-role="${role.id}" data-delta="-1">−</button>
-            <input type="number" id="users-${role.id}" value="${state.users[role.id]}" min="0" step="1"/>
-            <button type="button" data-role="${role.id}" data-delta="1">+</button>
+            <button type="button" data-fn="${fn}" data-delta="-1">−</button>
+            <input type="number" id="inp-${fn}" value="${calls}" min="0" step="1"/>
+            <button type="button" data-fn="${fn}" data-delta="1">+</button>
           </div>
-        </div>
-        <div class="role-wu-summary">
-          <div class="role-wu-val" id="role-wu-val-${role.id}">0</div>
-          <div class="role-wu-lbl">WU/user/day</div>
-        </div>
-        <button class="role-collapse-btn" id="cbtn-${role.id}">▼</button>
-      </div>
-      <div id="rbody-${role.id}" style="display:none">
-        <div class="fn-table-wrap">
-          <table class="fn-table">
-            <thead><tr><th>Function</th><th>WU</th><th>Calls/day</th><th>Row WU</th></tr></thead>
-            <tbody id="ftbody-${role.id}"></tbody>
-          </table>
-        </div>
-      </div>`;
-    wrap.appendChild(card);
-
-    // function rows grouped
-    const tbody = document.getElementById(`ftbody-${role.id}`);
-    groupOrder.forEach(grp => {
-      const fnsInGrp = FNS.filter(fn => FN_GROUP[fn]===grp);
-      if(!fnsInGrp.length) return;
-      const sepRow = document.createElement('tr');
-      sepRow.className = 'group-sep';
-      sepRow.innerHTML = `<td colspan="4">${GROUP_META[grp].label}</td>`;
-      tbody.appendChild(sepRow);
-      fnsInGrp.forEach(fn => {
-        const wu = WU_COST[fn];
-        const calls = state.calls[role.id][fn]||0;
-        const badgeCls = wu===0?'b-free':wu<=5?'b-5':wu<=8?'b-8':'b-10';
-        const badgeLbl = wu===0?'Free':`${wu} WU`;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>
-            <div style="font-size:.8125rem;color:var(--text)">${FN_DESC[fn]||fn}</div>
-            <div style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:.6875rem;color:var(--helper)">${fn}</div>
-          </td>
-          <td><span class="badge ${badgeCls}">${badgeLbl}</span></td>
-          <td>
-            <div class="stepper">
-              <button type="button" data-role="${role.id}" data-fn="${fn}" data-delta="-1">−</button>
-              <input type="number" id="inp-${role.id}-${fn}" value="${calls}" min="0" step="1"/>
-              <button type="button" data-role="${role.id}" data-fn="${fn}" data-delta="1">+</button>
-            </div>
-          </td>
-          <td><span class="row-wu" id="rwu-${role.id}-${fn}">${fmt(calls*wu)}</span></td>`;
-        tbody.appendChild(tr);
-      });
-    });
-
-    // collapse
-    const cbtn = document.getElementById(`cbtn-${role.id}`);
-    const rbody = document.getElementById(`rbody-${role.id}`);
-    function toggleRole(){
-      const open = rbody.style.display!=='none';
-      rbody.style.display = open?'none':'';
-      cbtn.classList.toggle('open',!open);
-    }
-    cbtn.addEventListener('click', e => { e.stopPropagation(); toggleRole(); });
-    document.getElementById(`rhdr-${role.id}`).addEventListener('click', e => {
-      if(e.target.closest('.stepper')) return;
-      toggleRole();
+        </td>
+        <td><span class="row-wu" id="rwu-${fn}">${fmt(calls*(WU_COST[fn]||0)*state.users)}</span></td>`;
+      tbody.appendChild(tr);
     });
   });
 }
 
 // ── EVENTS ────────────────────────────────────────────
 function bindEvents(){
-  // fn call inputs
-  document.getElementById('role-cards-wrap').addEventListener('input', e => {
-    const inp = e.target;
-    if(!inp.id||!inp.id.startsWith('inp-')) return;
-    const parts = inp.id.split('-');
-    const roleId = parts[1], fn = parts.slice(2).join('-');
-    const val = Math.max(0,parseInt(inp.value,10)||0);
-    inp.value = val;
-    state.calls[roleId][fn] = val;
-    const rwu = document.getElementById(`rwu-${roleId}-${fn}`);
-    if(rwu) rwu.textContent = fmt(val*(WU_COST[fn]||0));
+  // users stepper
+  document.getElementById('users-dec').addEventListener('click', () => {
+    const val = Math.max(0, state.users - 1);
+    state.users = val;
+    document.getElementById('inp-users').value = val;
+    calculate();
+  });
+  document.getElementById('users-inc').addEventListener('click', () => {
+    state.users++;
+    document.getElementById('inp-users').value = state.users;
+    calculate();
+  });
+  document.getElementById('inp-users').addEventListener('input', e => {
+    state.users = Math.max(0, parseInt(e.target.value, 10) || 0);
     calculate();
   });
 
-  // fn stepper buttons
-  document.getElementById('role-cards-wrap').addEventListener('click', e => {
+  // preset defaults
+  document.getElementById('preset-select').addEventListener('change', e => {
+    const role = e.target.value;
+    if (!role) return;
+    const defaults = ROLE_DEFAULTS[role] || {};
+    FNS.forEach(fn => {
+      const v = defaults[fn] || 0;
+      state.calls[fn] = v;
+      const inp = document.getElementById(`inp-${fn}`);
+      if (inp) inp.value = v;
+      const rwu = document.getElementById(`rwu-${fn}`);
+      if (rwu) rwu.textContent = fmt(v * (WU_COST[fn]||0) * state.users);
+    });
+    e.target.value = '';
+    calculate();
+  });
+
+  // fn call steppers
+  document.getElementById('fn-tbody').addEventListener('click', e => {
     const btn = e.target.closest('button[data-fn]');
-    if(!btn) return;
-    const {role,fn,delta} = btn.dataset;
-    const inp = document.getElementById(`inp-${role}-${fn}`);
-    if(!inp) return;
-    const val = Math.max(0,(parseInt(inp.value,10)||0)+parseInt(delta,10));
+    if (!btn) return;
+    const {fn, delta} = btn.dataset;
+    const inp = document.getElementById(`inp-${fn}`);
+    if (!inp) return;
+    const val = Math.max(0, (parseInt(inp.value,10)||0) + parseInt(delta,10));
     inp.value = val;
-    state.calls[role][fn] = val;
-    const rwu = document.getElementById(`rwu-${role}-${fn}`);
-    if(rwu) rwu.textContent = fmt(val*(WU_COST[fn]||0));
+    state.calls[fn] = val;
+    const rwu = document.getElementById(`rwu-${fn}`);
+    if (rwu) rwu.textContent = fmt(val * (WU_COST[fn]||0) * state.users);
     calculate();
   });
 
-  // user count steppers
-  document.getElementById('role-cards-wrap').addEventListener('click', e => {
-    const btn = e.target.closest('button[data-role]:not([data-fn])');
-    if(!btn) return;
-    const {role,delta} = btn.dataset;
-    const inp = document.getElementById(`users-${role}`);
-    if(!inp) return;
-    const val = Math.max(0,(parseInt(inp.value,10)||0)+parseInt(delta,10));
+  // fn call direct input
+  document.getElementById('fn-tbody').addEventListener('input', e => {
+    const inp = e.target;
+    if (!inp.id || !inp.id.startsWith('inp-')) return;
+    const fn = inp.id.replace('inp-', '');
+    if (!VALID_FNS.has(fn)) return;
+    const val = Math.max(0, parseInt(inp.value,10)||0);
     inp.value = val;
-    state.users[role] = val;
-    calculate();
-  });
-  document.getElementById('role-cards-wrap').addEventListener('input', e => {
-    if(!e.target.id||!e.target.id.startsWith('users-')) return;
-    const role = e.target.id.replace('users-','');
-    state.users[role] = Math.max(0,parseInt(e.target.value,10)||0);
+    state.calls[fn] = val;
+    const rwu = document.getElementById(`rwu-${fn}`);
+    if (rwu) rwu.textContent = fmt(val * (WU_COST[fn]||0) * state.users);
     calculate();
   });
 
   // buffer chips
   document.getElementById('buffer-chips').addEventListener('click', e => {
     const chip = e.target.closest('.buffer-chip');
-    if(!chip) return;
-    state.buffer = parseInt(chip.dataset.buf,10);
-    document.querySelectorAll('.buffer-chip').forEach(c => c.classList.toggle('active', parseInt(c.dataset.buf,10)===state.buffer));
+    if (!chip) return;
+    state.buffer = parseInt(chip.dataset.buf, 10);
+    document.querySelectorAll('.buffer-chip').forEach(c => c.classList.toggle('active', parseInt(c.dataset.buf,10) === state.buffer));
     calculate();
   });
 
   // reset
   document.getElementById('btn-reset').addEventListener('click', () => {
-    ROLES.forEach(role => {
-      FNS.forEach(fn => {
-        state.calls[role.id][fn] = 0;
-        const inp = document.getElementById(`inp-${role.id}-${fn}`);
-        if(inp) inp.value = 0;
-        const rwu = document.getElementById(`rwu-${role.id}-${fn}`);
-        if(rwu) rwu.textContent = '0';
-      });
-      state.users[role.id] = 0;
-      const ui = document.getElementById(`users-${role.id}`);
-      if(ui) ui.value = 0;
+    state.users = 0;
+    document.getElementById('inp-users').value = 0;
+    FNS.forEach(fn => {
+      state.calls[fn] = 0;
+      const inp = document.getElementById(`inp-${fn}`);
+      if (inp) inp.value = 0;
+      const rwu = document.getElementById(`rwu-${fn}`);
+      if (rwu) rwu.textContent = '0';
     });
     state.buffer = 10;
-    document.querySelectorAll('.buffer-chip').forEach(c => c.classList.toggle('active', parseInt(c.dataset.buf,10)===10));
+    document.querySelectorAll('.buffer-chip').forEach(c => c.classList.toggle('active', parseInt(c.dataset.buf,10) === 10));
     calculate();
     const win = document.getElementById('chat-window');
-    win.innerHTML='';
+    win.innerHTML = '';
     win.classList.remove('has-messages');
   });
 
   // eye toggle
   document.getElementById('ai-eye').addEventListener('click', () => {
     const inp = document.getElementById('ai-key');
-    inp.type = inp.type==='password'?'text':'password';
+    inp.type = inp.type === 'password' ? 'text' : 'password';
   });
 
   // enter key in textarea
   document.getElementById('chat-input').addEventListener('keydown', e => {
-    if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); runAI(); }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runAI(); }
   });
 }
 
-// ── AI ────────────────────────────────────────────────
+// ── AI ─────────────────────────────────────────────────
 const MODE_DESC = {
-  org:     'Describe your team — roles and headcount. Bob will estimate daily WU consumption per role and populate the calculator.',
+  org:     'Describe your team — size and what they do in ELM. Bob will estimate daily WU consumption and populate the calculator.',
   usecase: 'Describe a specific workflow or use case. Bob will identify which MCP functions fire, how often, and what they cost.',
-  manual:  'Enter user counts and call volumes directly. Use the role breakdown below to build your estimate by hand.'
+  manual:  'Set your user count, load defaults for a role type, then adjust call volumes. The summary updates in real time.'
 };
 
 const ORG_CHIPS = [
-  {key:'dev-team',  label:'💻 Dev team'},
-  {key:'mixed',     label:'🏢 Mixed org'},
-  {key:'analysts',  label:'📋 Analysts only'},
-  {key:'testers',   label:'🧪 Test team'},
-  {key:'architects',label:'🏗️ Architects'},
+  {key:'dev-team',   label:'💻 Dev team'},
+  {key:'mixed',      label:'🏢 Mixed org'},
+  {key:'analysts',   label:'📋 Analysts only'},
+  {key:'testers',    label:'🧪 Test team'},
+  {key:'architects', label:'🏗️ Architects'},
 ];
 const UC_CHIPS = [
   {key:'triage',    label:'🐛 Defect triage'},
@@ -728,43 +676,21 @@ const UC_PROMPTS = {
   'sprint':    'A team of 8 doing sprint planning. They query work items by release, review categories, check component configurations, and validate requirement readiness.',
 };
 
+const AI_SYSTEM = `You are an IBM ELM MCP usage analyst. Analyze the description and return a JSON estimate of daily MCP function usage.
+
+Return ONLY valid JSON in this exact shape:
+{
+  "users": N,
+  "calls": {"fn_name": calls_per_user_per_day, ...},
+  "summary": "one sentence explaining the key cost drivers"
+}
+
+Valid function IDs: list_project_areas, get_user, get_project_area, get_requirement, search_requirement, list_linked_requirements, get_project_components, get_project_component_folders, get_project_component_configuration, get_project_component_types, get_workitem, search_workitems, get_workitem_schema, list_workitem_releases, list_workitem_categories, list_linked_workitems, get_scm_artifact, get_testartifact, search_testartifact, get_testartifact_schema, list_linked_testartifacts, list_modeling_projects
+
+IMPORTANT: "calls" values are per user per day. Omit functions with zero calls. Base "users" on the total headcount described.`;
+
 let currentMode = 'org';
 let aiRunning = false;
-
-const ORG_SYSTEM = `You are an IBM ELM MCP usage analyst. Analyze a team description and return a JSON object with BOTH headcount AND function call estimates.
-
-Return ONLY valid JSON in this exact shape:
-{
-  "users": {"developer":N,"analyst":N,"tester":N,"architect":N,"manager":N},
-  "calls": {
-    "developer":{"fn_name":calls_per_user_per_day,...},
-    "analyst":{"fn_name":calls_per_user_per_day,...},
-    "tester":{"fn_name":calls_per_user_per_day,...},
-    "architect":{"fn_name":calls_per_user_per_day,...},
-    "manager":{"fn_name":calls_per_user_per_day,...}
-  },
-  "summary": "one sentence explaining the estimate"
-}
-
-Valid function IDs: list_project_areas, get_user, get_project_area, get_requirement, search_requirement, list_linked_requirements, get_project_components, get_project_component_folders, get_project_component_configuration, get_project_component_types, get_workitem, search_workitems, get_workitem_schema, list_workitem_releases, list_workitem_categories, list_linked_workitems, get_scm_artifact, get_testartifact, search_testartifact, get_testartifact_schema, list_linked_testartifacts, list_modeling_projects
-
-Role mapping: developer=EWM/CCM, analyst=DOORS Next, tester=ETM/QM, architect=SysML+DOORS, manager=read-only governance
-
-IMPORTANT: calls are per user per day. Omit zero-call functions. If a role is not mentioned, set its users to 0 and omit its calls.`;
-
-const UC_SYSTEM = `You are an IBM ELM MCP usage analyst. Analyze a workflow description and return a JSON object estimating which MCP functions are called and how often.
-
-Return ONLY valid JSON in this exact shape:
-{
-  "calls": {"fn_name": total_calls_per_day, ...},
-  "role": "developer|analyst|tester|architect|manager",
-  "users": N,
-  "summary": "one sentence explaining what drives the most WU"
-}
-
-Valid function IDs: list_project_areas, get_user, get_project_area, get_requirement, search_requirement, list_linked_requirements, get_project_components, get_project_component_folders, get_project_component_configuration, get_project_component_types, get_workitem, search_workitems, get_workitem_schema, list_workitem_releases, list_workitem_categories, list_linked_workitems, get_scm_artifact, get_testartifact, search_testartifact, get_testartifact_schema, list_linked_testartifacts, list_modeling_projects
-
-IMPORTANT: calls are TOTAL per day (not per user). Omit zero-call functions.`;
 
 function addBubble(text, type){
   const win = document.getElementById('chat-window');
@@ -778,13 +704,13 @@ function addBubble(text, type){
 }
 
 async function runAI(){
-  if(aiRunning) return;
+  if (aiRunning) return;
   const endpoint = document.getElementById('ai-endpoint').value.trim();
-  const key = document.getElementById('ai-key').value.trim();
-  const prompt = document.getElementById('chat-input').value.trim();
-  if(!prompt){ addBubble('Please describe your team or workflow first.','ai'); return; }
-  if(!key){ addBubble('Please enter your Bob API key above.','ai'); return; }
-  if(!endpoint){ addBubble('Please enter the API endpoint URL above.','ai'); return; }
+  const key      = document.getElementById('ai-key').value.trim();
+  const prompt   = document.getElementById('chat-input').value.trim();
+  if (!prompt)   { addBubble('Please describe your team or workflow first.', 'ai'); return; }
+  if (!key)      { addBubble('Please enter your Bob API key above.', 'ai'); return; }
+  if (!endpoint) { addBubble('Please enter the API endpoint URL above.', 'ai'); return; }
 
   aiRunning = true;
   const btn = document.getElementById('btn-analyze');
@@ -793,54 +719,50 @@ async function runAI(){
 
   addBubble(escHtml(prompt), 'user');
   document.getElementById('chat-input').value = '';
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
 
   const thinking = addBubble('Thinking…', 'thinking');
 
   try {
     const ctrl = new AbortController();
-    const timer = setTimeout(()=>ctrl.abort(), 45000);
+    const timer = setTimeout(() => ctrl.abort(), 45000);
 
     const resp = await fetch(endpoint, {
-      method:'POST',
-      headers:{'Authorization':`Bearer ${key}`,'Content-Type':'application/json'},
+      method: 'POST',
+      headers: {'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json'},
       body: JSON.stringify({
-        model:'claude-opus-4-5',
-        messages:[
-          {role:'system', content: currentMode==='org' ? ORG_SYSTEM : UC_SYSTEM},
+        model: 'claude-opus-4-5',
+        messages: [
+          {role:'system', content: AI_SYSTEM},
           {role:'user',   content: prompt}
         ]
       }),
       signal: ctrl.signal
-    }).finally(()=>clearTimeout(timer));
+    }).finally(() => clearTimeout(timer));
 
     thinking.remove();
 
-    if(resp.status===401||resp.status===403){ addBubble('❌ Invalid API key — generate an Inference-scoped key at <a href="https://bob.ibm.com" target="_blank" style="color:#78a9ff">bob.ibm.com ↗</a>','ai'); return; }
-    if(resp.status===429){ addBubble('Rate limit hit — wait a moment and retry.','ai'); return; }
-    if(!resp.ok){ addBubble(`API error HTTP ${resp.status}.`,'ai'); return; }
+    if (resp.status===401||resp.status===403){ addBubble('❌ Invalid API key — generate an Inference-scoped key at <a href="https://bob.ibm.com" target="_blank" style="color:#78a9ff">bob.ibm.com ↗</a>','ai'); return; }
+    if (resp.status===429){ addBubble('Rate limit hit — wait a moment and retry.','ai'); return; }
+    if (!resp.ok){ addBubble(`API error HTTP ${resp.status}.`,'ai'); return; }
 
-    const data = await resp.json().catch(()=>null);
+    const data = await resp.json().catch(() => null);
     const content = data?.choices?.[0]?.message?.content ?? data?.content?.[0]?.text ?? null;
-    if(!content){ addBubble('No response from API.','ai'); return; }
+    if (!content){ addBubble('No response from API.','ai'); return; }
 
     const cleaned = content.replace(/^```(?:json)?\s*/i,'').replace(/```\s*$/,'').trim();
     let parsed;
-    try{ parsed = JSON.parse(cleaned); } catch(_){ addBubble('Could not parse response — try rephrasing.','ai'); return; }
+    try { parsed = JSON.parse(cleaned); }
+    catch(_){ addBubble('Could not parse response — try rephrasing.','ai'); return; }
 
-    if(currentMode==='org') applyOrgResult(parsed);
-    else applyUCResult(parsed);
-
-    // show results section
-    document.getElementById('results-section').style.display='';
-    setTimeout(()=>document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'}),100);
+    applyResult(parsed);
+    setTimeout(() => document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'}), 100);
 
   } catch(err){
     thinking.remove();
-    const isFile = location.protocol==='file:';
-    if(err.name==='AbortError') addBubble('Request timed out after 45s.','ai');
-    else if(isFile) addBubble('<strong>Open this page over HTTP, not file://.</strong> Run: <code>python3 -m http.server 8080</code>','ai');
-    else addBubble(`Network error: ${err.message}`, 'ai');
+    if (err.name === 'AbortError') addBubble('Request timed out after 45s.','ai');
+    else if (location.protocol === 'file:') addBubble('<strong>Open this page over HTTP, not file://.</strong> Run: <code>python3 -m http.server 8080</code>','ai');
+    else addBubble(`Network error: ${err.message}`,'ai');
   } finally {
     aiRunning = false;
     btn.disabled = false;
@@ -848,73 +770,37 @@ async function runAI(){
   }
 }
 
-function applyOrgResult(parsed){
-  if(parsed.users) ROLES.forEach(r => {
-    if(parsed.users[r.id]!==undefined){
-      state.users[r.id] = parsed.users[r.id]||0;
-      const ui = document.getElementById(`users-${r.id}`);
-      if(ui) ui.value = state.users[r.id];
-    }
-  });
-  if(parsed.calls) ROLES.forEach(r => {
-    const rc = parsed.calls[r.id];
-    if(!rc) return;
-    Object.entries(rc).forEach(([fn,v]) => {
-      if(!VALID_FNS.has(fn)||!Number.isInteger(v)||v<0) return;
-      state.calls[r.id][fn] = v;
-      const inp = document.getElementById(`inp-${r.id}-${fn}`);
-      if(inp) inp.value = v;
-      const rwu = document.getElementById(`rwu-${r.id}-${fn}`);
-      if(rwu) rwu.textContent = fmt(v*(WU_COST[fn]||0));
-    });
+function applyResult(parsed){
+  if (Number.isInteger(parsed.users) && parsed.users >= 0){
+    state.users = parsed.users;
+    document.getElementById('inp-users').value = parsed.users;
+  }
+  if (parsed.calls) Object.entries(parsed.calls).forEach(([fn, v]) => {
+    if (!VALID_FNS.has(fn) || !Number.isInteger(v) || v < 0) return;
+    state.calls[fn] = v;
+    const inp = document.getElementById(`inp-${fn}`);
+    if (inp) inp.value = v;
   });
   calculate();
-  const summary = parsed.summary||'Estimate applied to calculator.';
-  addBubble(`<strong>Done.</strong> ${escHtml(summary)}<br><br>Scroll down to see your daily WU breakdown. Expand the role cards below to fine-tune.`, 'ai');
-}
-
-function applyUCResult(parsed){
-  const roleId = parsed.role||'developer';
-  const users = parsed.users||1;
-  state.users[roleId] = users;
-  const ui = document.getElementById(`users-${roleId}`);
-  if(ui) ui.value = users;
-  if(parsed.calls) Object.entries(parsed.calls).forEach(([fn,v]) => {
-    if(!VALID_FNS.has(fn)||!Number.isInteger(v)||v<0) return;
-    const perUser = Math.max(1,Math.round(v/users));
-    state.calls[roleId][fn] = perUser;
-    const inp = document.getElementById(`inp-${roleId}-${fn}`);
-    if(inp) inp.value = perUser;
-    const rwu = document.getElementById(`rwu-${roleId}-${fn}`);
-    if(rwu) rwu.textContent = fmt(perUser*(WU_COST[fn]||0));
-  });
-  calculate();
-  const summary = parsed.summary||'Estimate applied.';
-  addBubble(`<strong>Done.</strong> ${escHtml(summary)}<br><br>Scroll down to see the WU breakdown.`, 'ai');
+  addBubble(`<strong>Done.</strong> ${escHtml(parsed.summary || 'Estimate applied.')}<br><br>Scroll down to review and fine-tune the call volumes.`, 'ai');
 }
 
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ── MODE SWITCHING ────────────────────────────────────
- function applyMode(mode){
+// ── MODE SWITCHING ─────────────────────────────────────
+function applyMode(mode){
   currentMode = mode;
-  document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode===mode));
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
   document.getElementById('mode-desc').textContent = MODE_DESC[mode];
   const isAI = mode !== 'manual';
   document.getElementById('chip-row').style.display = isAI ? '' : 'none';
   const cw = document.getElementById('chat-window');
-  // Always clear inline style so the CSS class (.has-messages) controls visibility
   cw.style.display = '';
   cw.classList.toggle('hidden-mode', !isAI);
   document.getElementById('ai-input-row').style.display = isAI ? '' : 'none';
   document.getElementById('manual-section').classList.toggle('active', !isAI);
-  if(!isAI){
-    document.getElementById('results-section').style.display = '';
-    document.getElementById('detail-body').classList.add('open');
-    calculate();
-  }
-  if(isAI){
-    document.getElementById('chat-input').placeholder = mode==='org'
+  if (isAI){
+    document.getElementById('chat-input').placeholder = mode === 'org'
       ? 'e.g. We have 10 developers, 5 req analysts and 3 test engineers using ELM daily…'
       : 'e.g. We run nightly traceability audits across 200 requirements…';
   }
@@ -929,34 +815,28 @@ function setupModes(){
 
 function renderChips(){
   const row = document.getElementById('chip-row');
-  if(currentMode==='manual'){ row.innerHTML=''; return; }
-  const chips = currentMode==='org' ? ORG_CHIPS : UC_CHIPS;
-  const prompts = currentMode==='org' ? ORG_PROMPTS : UC_PROMPTS;
-  row.innerHTML = chips.map(c=>`<button class="chip" data-key="${c.key}" data-mode="${currentMode}">${c.label}</button>`).join('');
+  if (currentMode === 'manual'){ row.innerHTML = ''; return; }
+  const chips   = currentMode === 'org' ? ORG_CHIPS   : UC_CHIPS;
+  const prompts = currentMode === 'org' ? ORG_PROMPTS : UC_PROMPTS;
+  row.innerHTML = chips.map(c => `<button class="chip" data-key="${c.key}">${c.label}</button>`).join('');
   row.querySelectorAll('.chip').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.getElementById('chat-input').value = prompts[btn.dataset.key]||'';
-      row.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      document.getElementById('chat-input').value = prompts[btn.dataset.key] || '';
+      row.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
     });
   });
 }
 
-// ── INIT ──────────────────────────────────────────────
-buildRoleCards();
+// ── INIT ───────────────────────────────────────────────
+buildFnTable();
 bindEvents();
 setupModes();
 renderChips();
 
-// Restore buffer chip
-document.querySelectorAll('.buffer-chip').forEach(c => c.classList.toggle('active', parseInt(c.dataset.buf,10)===state.buffer));
-
-// If saved state has data, show results immediately (AI modes)
-const hasData = ROLES.some(r => state.users[r.id]>0);
-if(hasData){
-  document.getElementById('results-section').style.display='';
-  calculate();
-}
+document.getElementById('inp-users').value = state.users;
+document.querySelectorAll('.buffer-chip').forEach(c => c.classList.toggle('active', parseInt(c.dataset.buf,10) === state.buffer));
+calculate();
 </script>
 </body>
 </html>
