@@ -631,6 +631,9 @@ function bindEvents(){
     inp.type = inp.type === 'password' ? 'text' : 'password';
   });
 
+  // analyze button
+  document.getElementById('btn-analyze').addEventListener('click', () => runAI());
+
   // enter key in textarea
   document.getElementById('chat-input').addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runAI(); }
