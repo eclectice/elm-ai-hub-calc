@@ -1,5 +1,7 @@
 # IBM ELM MCP Usage Calculator
 
-**[👉 Open the Calculator](https://brettscharm.github.io/elm-ai-hub-calc/elm-mcp-calculator.html)**
+> **Fork & Mirror:** Originally authored by **Brett Scharmett**, forked and hosted by **eclectice**.
 
-Click the link. That's it.
+**[👉 Open the Live Calculator](https://eclectice.github.io/elm-ai-hub-calc/elm-mcp-calculator.html)**
+
+Estimate daily Work Units (WU), tokens, and quotas for running the IBM ELM Model Context Protocol (MCP) server.
